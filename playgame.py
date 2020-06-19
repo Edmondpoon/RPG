@@ -1,0 +1,3 @@
+import rpg
+
+play()
