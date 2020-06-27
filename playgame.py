@@ -1,3 +1,0 @@
-import rpg
-
-play()
