@@ -1,4 +1,3 @@
-#test
 import os
 import images
 import collision 
