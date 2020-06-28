@@ -61,6 +61,7 @@ def player():
     POSy = random.randint(38, 417)
     return images.tree(WIDTH, HEIGHT, POSx, POSy)
 
+#generates wall
 def generate_wall(sprites_list, BORDER):
     left_wall   = images.side_wall(40, 10000, 0, 0)
     right_wall  = images.side_wall(40, 500, 460, 0)
@@ -69,7 +70,7 @@ def generate_wall(sprites_list, BORDER):
     for wall in [left_wall, right_wall, top_wall, bottom_wall]:
         sprites_list.add(wall)
     BORDER = True
-
+#removes wall sprites from sprites list
 def remove_wall(sprites_list, WALL_REMOVED):
     left_wall   = images.side_wall(40, 10000, 0, 0)
     right_wall  = images.side_wall(40, 500, 460, 0)
@@ -79,6 +80,7 @@ def remove_wall(sprites_list, WALL_REMOVED):
         sprites_list.remove(wall)   
     WALL_REMOVED = True
 
+#creates the map
 def map(window, sprites_list, BORDER, WALL_REMOVED):
     window.fill((255, 255, 255))
     if BORDER == False:
@@ -87,7 +89,7 @@ def map(window, sprites_list, BORDER, WALL_REMOVED):
     if WALL_REMOVED == False:
         remove_wall(sprites_list, WALL_REMOVED)
     pygame.display.flip()
-
+    
 def play():
     mob_dict = {}
     WAVES  = 3
