@@ -101,3 +101,12 @@ class top_wall(pygame.sprite.Sprite):
         self.rect.x = POSx
         self.rect.y = POSy
 
+class player_attack(pygame.sprite.Sprite):
+    def __init__(self, width, height, POSx, POSy):
+        super().__init__()
+        self.image = pygame.Surface([width,height])
+        self.image.fill((255, 255, 255))
+        self.image.set_colorkey((255, 255, 255))
+        self.image = pygame.image.load(os.path.join("imgs", "attack.png"))
+        self.rect  = self.image.get_rect()
+        
