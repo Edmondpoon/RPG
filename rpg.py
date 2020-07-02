@@ -17,7 +17,7 @@ VEL          = 5
 
 #creates a wizard mob
 def wizard(mobs, player, mob_dict):
-    mob      = images.mob("T", WIDTH, HEIGHT)
+    mob      = images.mob("W", WIDTH, HEIGHT)
     entities = mobs[:]
     entities.append(player)
     mob.rect.x          = random.randint(38, 433)
