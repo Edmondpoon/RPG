@@ -70,6 +70,7 @@ def generate_wall(sprites_list, BORDER):
     for wall in [left_wall, right_wall, top_wall, bottom_wall]:
         sprites_list.add(wall)
     BORDER = True
+
 #removes wall sprites from sprites list
 def remove_wall(sprites_list, WALL_REMOVED):
     left_wall   = images.side_wall(40, 10000, 0, 0)
