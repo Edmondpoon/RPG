@@ -3,7 +3,7 @@ import random
 import os
 
 class mob(pygame.sprite.Sprite):
-    def __init__(self, type_, width, height, POSx, POSy):
+    def __init__(self, type_, width, height):
         mobs = {"W" : "wizard.jpg", "T" : "tank.jpg"}
         hp   = {"W" : 10, "T" : 25}
         super().__init__()
@@ -13,8 +13,7 @@ class mob(pygame.sprite.Sprite):
         self.image.set_colorkey((255, 255, 255))
         self.image  = pygame.image.load(os.path.join("imgs", mobs[type_]))
         self.rect   = self.image.get_rect()
-        self.rect.x = POSx
-        self.rect.y = POSy
+    
 
 
 
