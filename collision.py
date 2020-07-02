@@ -1,10 +1,14 @@
 import pygame
-def Spawn(mobs, test):
+def Spawn(mobs, new_spawn):
     for mob in mobs:
         #checks if the new spawn will be on top of another mob
         #must check whether mob is a wizard or tank since they are different sizes
+        if pygame.sprite.collide_rect(mob, new_spawn):
+            return True
+    return False
 
-        if pygame.sprite.collide_rect(mob, test):
-            return False
-    return True
-
+def movement(mobs, mover):
+    for mob in mobs:
+        if pygame.sprite.collide_rect(mob, mover):
+            return True
+    return False

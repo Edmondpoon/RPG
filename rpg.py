@@ -23,7 +23,7 @@ def wizard(mobs, player, mob_dict):
     mob.rect.x          = random.randint(38, 433)
     mob.rect.y          = random.randint(38, 417)
     FLAG          = collision.Spawn(entities, mob)
-    while FLAG == False:
+    while FLAG == True:
         mob.rect.x = random.randint(38, 433)
         mob.rect.y = random.randint(38, 417)
         FLAG = collision.Spawn(entities, mob)
@@ -38,7 +38,7 @@ def tank(mobs, player):
     mob.rect.x          = random.randint(38, 433)
     mob.rect.y          = random.randint(38, 417)
     FLAG          = collision.Spawn(entities, mob)
-    while FLAG == False: 
+    while FLAG == True: 
         mob.rect.x = random.randint(38, 433)
         mob.rect.y = random.randint(38, 417)
         FLAG = collision.Spawn(entities, mob)
@@ -113,14 +113,15 @@ def play():
             p1.move_up(VEL)
         if keys[pygame.K_DOWN]:
             p1.move_down(VEL)
-
+        
         if WAVES != 0 and mobs == []:
             WAVES -= 1
             spawn_mobs(mobs, p1, sprites_list, mob_dict)
         #else:
             #for mob in mobs:
                 #mob.move(VEL)
-
+        if collision.movement(mobs, p1):
+            print(230)
         sprites_list.update()
         map(window, sprites_list, BORDER, WALL_REMOVED)
         clock.tick(60)
