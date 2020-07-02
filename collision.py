@@ -10,5 +10,5 @@ def Spawn(mobs, new_spawn):
 def movement(mobs, mover):
     for mob in mobs:
         if pygame.sprite.collide_rect(mob, mover):
-            return True
-    return False
+            return [True, mob]
+    return [False, None]

@@ -120,8 +120,12 @@ def play():
         #else:
             #for mob in mobs:
                 #mob.move(VEL)
-        if collision.movement(mobs, p1):
-            print(230)
+
+        hp_loss = collision.movement(mobs, p1)
+        if hp_loss[0] == True:
+            hp_loss[1].hp -= 1
+            p1.hp -= 1
+            
         sprites_list.update()
         map(window, sprites_list, BORDER, WALL_REMOVED)
         clock.tick(60)
