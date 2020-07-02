@@ -48,7 +48,7 @@ def tank(mobs, player):
 
 #spawns a random amount of wizards and tanks
 def spawn_mobs(mobs, player, sprites_list, mob_dict):
-    num_mobs = random.randint(5, 10)
+    num_mobs = random.randint(1, 5)
     for mob in range(num_mobs):
         spawn = random.random()
         if spawn  <= 0.4:
