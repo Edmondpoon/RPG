@@ -94,10 +94,11 @@ def map(window, sprites_list, BORDER, WALL_REMOVED):
     
 def play():
     mob_dict = {}
-    WAVES  = 3
-    mobs = []
-    run  = True
-    p1   = player()
+    WAVES    = 3
+    mobs     = []
+    attacks  = {}
+    run      = True
+    p1       = player()
     sprites_list.add(p1)
     while run:
         pygame.time.delay(50)
@@ -120,11 +121,50 @@ def play():
         #else:
             #for mob in mobs:
                 #mob.move(VEL)
+        
+        for attack in attacks.keys():
+            pass
 
-        hp_loss = collision.movement(mobs, p1)
-        if hp_loss[0] == True:
-            hp_loss[1].hp -= 1
-            p1.hp -= 1
+        if pygame.mouse.get_pressed():
+            position = pygame.mouse.get_pos()
+            attack   = image.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y)
+            if position[0] > p1.rect.x and position[1] > p1.rect.y:
+                #fourth quadrant
+                attacks[attack] = "bottomright"
+                pass
+            elif position[0] < p1.rect.x and position[1] < p1.rect.y:
+                #second quadrant
+                attacks[attack] = "topleft"
+                pass
+            elif position[0] < p1.rect.x and position[1] > p1.rect.y:
+                #third quadrant
+                attacks[attack] = "bottomleft"
+                pass
+            elif position[0] > p1.rect.x and position[1] < p1.rect.y: 
+                #first quadrant
+                attacks[attack] = "topright"
+                pass
+            elif position[0] == p1.rect.x and posision[1] > p1.rect.y:
+                #y-axis bottom
+                attacks[attack] = "down"
+                pass
+            elif position[0] == p1.rect.x and position[1] < p1.rect.y:
+                #y-axis top
+                attacks[attack] = "up"
+                pass
+            elif position[0] > p1.rect.x and position[1] == p1.rect.y:
+                #x-axis right
+                attacks[attack] = "right"
+                pass
+            elif position[0] < p1.rect.x and position[1] == p1.rect.y:
+                #x-axis left
+                attacks[attack] = "left"
+                pass
+
+       # hp_loss = collision.movement(mobs, p1)
+       # if hp_loss[0] == True:
+       #     hp_loss[1].hp -= 1
+       #     p1.hp -= 1
             
         sprites_list.update()
         map(window, sprites_list, BORDER, WALL_REMOVED)

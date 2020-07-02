@@ -15,8 +15,6 @@ class mob(pygame.sprite.Sprite):
         self.rect   = self.image.get_rect()
     
 
-
-
     def move(self, VEL):
         DIRECTION = random.choice(["right", "left", "up", "down"])
         if DIRECTION == "right":
@@ -107,6 +105,35 @@ class player_attack(pygame.sprite.Sprite):
         self.image = pygame.Surface([width,height])
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
-        self.image = pygame.image.load(os.path.join("imgs", "attack.png"))
-        self.rect  = self.image.get_rect()
-        
+        self.image  = pygame.image.load(os.path.join("imgs", "attack.png"))
+        self.rect   = self.image.get_rect()
+        self.rect.x = POSx
+        self.rect.y = POSy
+    
+    def move_right(self, VEL):
+        self.rect.x += VEL
+    
+    def move_left(self, VEL):
+        self.rect.x -= VEL
+
+    def move_up(self, VEL):
+        self.rect.y -= VEL
+
+    def move_down(self, VEL):
+        self.rect.y += VEL
+
+    def move_topright(self, VEL):
+        self.rect.x += VEL
+        self.rect.y -= VEL
+
+    def move_topleft(self, VEL):
+        self.rect.x -= VEL
+        self.rect.y -= VEL
+
+    def move_bottomleft(self, VEL):
+        self.rect.x -= VEL
+        self.rect.y += VEL
+
+    def move_bottomright(self, VEL):
+        self.rect.x += VEL
+        self.rect.y += VEL
