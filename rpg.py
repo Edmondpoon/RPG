@@ -125,41 +125,78 @@ def play():
         for attack in attacks.keys():
             pass
 
-        if pygame.mouse.get_pressed():
+        if pygame.mouse.get_pressed() == (True, False, False):
             position = pygame.mouse.get_pos()
-            attack   = image.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y)
+            attack   = images.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y)
             if position[0] > p1.rect.x and position[1] > p1.rect.y:
                 #fourth quadrant
-                attacks[attack] = "bottomright"
-                pass
+                RISE  = position[0] - p1.rect.x
+                RUN   = position[1] - p1.rect.y
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant4", SLOPE]
+                sprites_list.add(attack)            
+
             elif position[0] < p1.rect.x and position[1] < p1.rect.y:
                 #second quadrant
-                attacks[attack] = "topleft"
-                pass
+                RISE  = p1.rect.x - position[0]
+                RUN   = position[1] - p1.rect.y
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant2", SLOPE]
+                sprites_list.add(attack)            
+
             elif position[0] < p1.rect.x and position[1] > p1.rect.y:
                 #third quadrant
-                attacks[attack] = "bottomleft"
-                pass
+                RISE  = p1.rect.x - position[0]
+                RUN   = p1.rect.y - position[1]
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant3", SLOPE]
+                sprites_list.add(attack)            
+
             elif position[0] > p1.rect.x and position[1] < p1.rect.y: 
-                #first quadrant
-                attacks[attack] = "topright"
-                pass
+                #first quadrant 
+                RISE  = position[0] - p1.rect.x
+                RUN   = p1.rect.y - position[1]
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant1", SLOPE]
+                sprites_list.add(attack)            
+                
             elif position[0] == p1.rect.x and posision[1] > p1.rect.y:
                 #y-axis bottom
-                attacks[attack] = "down"
-                pass
+                attacks[attack] = ["verticaldown", VEL]
+                sprites_list.add(attack)            
+
             elif position[0] == p1.rect.x and position[1] < p1.rect.y:
                 #y-axis top
-                attacks[attack] = "up"
-                pass
+                attacks[attack] = ["verticalup", VEL]
+                sprites_list.add(attack)            
+
             elif position[0] > p1.rect.x and position[1] == p1.rect.y:
                 #x-axis right
-                attacks[attack] = "right"
-                pass
+                attacks[attack] = ["horizontalright", VEL]
+                sprites_list.add(attack)            
+
             elif position[0] < p1.rect.x and position[1] == p1.rect.y:
                 #x-axis left
-                attacks[attack] = "left"
-                pass
+                attacks[attack] = ["horizontalleft", VEL] 
+                sprites_list.add(attack)            
+
+        for attack in attacks.keys():
+            if attacks[attack][0] == "quadrant1":
+                attack.quadrant1(attacks[attack][1])
+            elif attacks[attack][0] == "quadrant2":
+                attack.quadrant2(attacks[attack][1])
+            elif attacks[attack][0] == "quadrant3":
+                attack.quadrant3(attacks[attack][1])
+            elif attacks[attack][0] == "quadrant4":
+                attack.quadrant4(attacks[attack][1])
+            elif attacks[attack][0] == "verticaldown":
+                attack.verticaldown(attacks[attack][1])
+            elif attacks[attack][0] == "verticalup":
+                attack.verticalup(attacks[attack][1])
+            elif attacks[attack][0] == "horizontalright":
+                attack.horizontalright(attacks[attack][1])
+            elif attacks[attack][0] == "horizontalleft":
+                attack.horizontalleft(attacks[attack][1])
 
        # hp_loss = collision.movement(mobs, p1)
        # if hp_loss[0] == True:

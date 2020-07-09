@@ -110,30 +110,30 @@ class player_attack(pygame.sprite.Sprite):
         self.rect.x = POSx
         self.rect.y = POSy
         
-    def quadrant1(self, playerpos, cursorpos):
-        RUN   = cursorpos[0] - playerpos.rect.x
-        RISE  = cursorpos[1] - playerpos.rect.y
-        SLOPE = RISE / RUN
-        self.rect.x += 1
-        self.rect.y -= SLOPE
+    def quadrant1(self, SLOPE):
+        self.rect.x += 3
+        self.rect.y -= 3 * SLOPE
 
-    def quadrant2(self, playerpos, cursorpos): 
-        RUN   = playerpos.rect.x - cursorpos[0]
-        RISE  = cursorpos[1] - playerpos.rect.y
-        SLOPE = RISE / RUN
-        self.rect.x -= 1
-        self.rect.y -= SLOPE
+    def quadrant2(self, SLOPE):
+        self.rect.x -= 3
+        self.rect.y -= 3 * SLOPE
     
-    def quadrant3(self, playerpos, cursorpos): 
-        RUN   = playerpos.rect.x - cursorpos[0]
-        RISE  = playerpos.rect.y - cursorpos[1]
-        SLOPE = RISE / RUN
-        self.rect.x -=1
-        self.rect.y += SLOPE
+    def quadrant3(self, SLOPE):
+        self.rect.x -= 3
+        self.rect.y += 3 * SLOPE
 
-    def quadrant4(self, playerpos, cursorpos): 
-        RUN   = cursorpos[0] - playerpos.rect.x
-        RISE  = playerpos.rect.y - cursorpos[1]
-        SLOPE = RISE / RUN
-        self.rect.x +=1
-        self.rect.y += SLOPE
+    def quadrant4(self, SLOPE):
+        self.rect.x += 3
+        self.rect.y += 3 * SLOPE
+
+    def horizontalright(self, VEL):
+        self.rect.x += VEL
+
+    def horizontalleft(self, VEL):
+        self.rect.x -= VEL
+
+    def verticalup(self, VEL):
+        self.rect.y -= VEL
+
+    def verticaldown(self, VEL):
+        self.rect.y += VEL
