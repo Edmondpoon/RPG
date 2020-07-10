@@ -130,32 +130,32 @@ def play():
             attack   = images.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y)
             if position[0] > p1.rect.x and position[1] > p1.rect.y:
                 #fourth quadrant
-                RISE  = position[0] - p1.rect.x
-                RUN   = position[1] - p1.rect.y
+                RUN   = position[0] - p1.rect.x
+                RISE  = position[1] - p1.rect.y
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant4", SLOPE]
                 sprites_list.add(attack)            
 
             elif position[0] < p1.rect.x and position[1] < p1.rect.y:
                 #second quadrant
-                RISE  = p1.rect.x - position[0]
-                RUN   = position[1] - p1.rect.y
+                RUN   = p1.rect.x - position[0]
+                RISE  = p1.rect.y - position[1]
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant2", SLOPE]
                 sprites_list.add(attack)            
 
             elif position[0] < p1.rect.x and position[1] > p1.rect.y:
                 #third quadrant
-                RISE  = p1.rect.x - position[0]
-                RUN   = p1.rect.y - position[1]
+                RUN   = p1.rect.x - position[0]
+                RISE  = position[1] - p1.rect.y
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant3", SLOPE]
                 sprites_list.add(attack)            
 
             elif position[0] > p1.rect.x and position[1] < p1.rect.y: 
                 #first quadrant 
-                RISE  = position[0] - p1.rect.x
-                RUN   = p1.rect.y - position[1]
+                RUN   = position[0] - p1.rect.x
+                RISE  = p1.rect.y - position[1]
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant1", SLOPE]
                 sprites_list.add(attack)            
