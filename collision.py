@@ -12,3 +12,9 @@ def movement(mobs, mover):
         if pygame.sprite.collide_rect(mob, mover):
             return [True, mob]
     return [False, None]
+
+def attack_movement(mobs, attack):
+    for mob in mobs:
+        if pygame.sprite.collide_rect(mob, attack):
+            return [True, mob]
+    return [False, None]

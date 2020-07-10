@@ -94,10 +94,11 @@ def map(window, sprites_list, BORDER, WALL_REMOVED):
     
 def play():
     mob_dict = {}
-    WAVES  = 3
-    mobs = []
-    run  = True
-    p1   = player()
+    WAVES    = 3
+    mobs     = []
+    attacks  = {}
+    run      = True
+    p1       = player()
     sprites_list.add(p1)
     while run:
         pygame.time.delay(50)
@@ -120,11 +121,87 @@ def play():
         #else:
             #for mob in mobs:
                 #mob.move(VEL)
+        
+        for attack in attacks.keys():
+            pass
 
-        hp_loss = collision.movement(mobs, p1)
-        if hp_loss[0] == True:
-            hp_loss[1].hp -= 1
-            p1.hp -= 1
+        if pygame.mouse.get_pressed() == (True, False, False):
+            position = pygame.mouse.get_pos()
+            attack   = images.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y)
+            if position[0] > p1.rect.x and position[1] > p1.rect.y:
+                #fourth quadrant
+                RUN   = position[0] - p1.rect.x
+                RISE  = position[1] - p1.rect.y
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant4", SLOPE]
+                sprites_list.add(attack)            
+
+            elif position[0] < p1.rect.x and position[1] < p1.rect.y:
+                #second quadrant
+                RUN   = p1.rect.x - position[0]
+                RISE  = p1.rect.y - position[1]
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant2", SLOPE]
+                sprites_list.add(attack)            
+
+            elif position[0] < p1.rect.x and position[1] > p1.rect.y:
+                #third quadrant
+                RUN   = p1.rect.x - position[0]
+                RISE  = position[1] - p1.rect.y
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant3", SLOPE]
+                sprites_list.add(attack)            
+
+            elif position[0] > p1.rect.x and position[1] < p1.rect.y: 
+                #first quadrant 
+                RUN   = position[0] - p1.rect.x
+                RISE  = p1.rect.y - position[1]
+                SLOPE = RISE / RUN
+                attacks[attack] = ["quadrant1", SLOPE]
+                sprites_list.add(attack)            
+                
+            elif position[0] == p1.rect.x and posision[1] > p1.rect.y:
+                #y-axis bottom
+                attacks[attack] = ["verticaldown", VEL]
+                sprites_list.add(attack)            
+
+            elif position[0] == p1.rect.x and position[1] < p1.rect.y:
+                #y-axis top
+                attacks[attack] = ["verticalup", VEL]
+                sprites_list.add(attack)            
+
+            elif position[0] > p1.rect.x and position[1] == p1.rect.y:
+                #x-axis right
+                attacks[attack] = ["horizontalright", VEL]
+                sprites_list.add(attack)            
+
+            elif position[0] < p1.rect.x and position[1] == p1.rect.y:
+                #x-axis left
+                attacks[attack] = ["horizontalleft", VEL] 
+                sprites_list.add(attack)            
+
+        for attack in attacks.keys():
+            if attacks[attack][0] == "quadrant1":
+                attack.quadrant1(attacks[attack][1], mobs, attack, sprites_list)
+            elif attacks[attack][0] == "quadrant2":
+                attack.quadrant2(attacks[attack][1], mobs, attack, sprites_list)
+            elif attacks[attack][0] == "quadrant3":
+                attack.quadrant3(attacks[attack][1], mobs, attack, sprites_list)
+            elif attacks[attack][0] == "quadrant4":
+                attack.quadrant4(attacks[attack][1], mobs, attack, sprites_list)
+            elif attacks[attack][0] == "verticaldown":
+                attack.verticaldown(attacks[attack][1], mobs, attack, sprites_list)
+            elif attacks[attack][0] == "verticalup":
+                attack.verticalup(attacks[attack][1], mobs, attack, sprites_list)
+            elif attacks[attack][0] == "horizontalright":
+                attack.horizontalright(attacks[attack][1], mobs, attack, sprites_list)
+            elif attacks[attack][0] == "horizontalleft":
+                attack.horizontalleft(attacks[attack][1], mobs, attack, sprites_list)
+
+       # hp_loss = collision.movement(mobs, p1)
+       # if hp_loss[0] == True:
+       #     hp_loss[1].hp -= 1
+       #     p1.hp -= 1
             
         sprites_list.update()
         map(window, sprites_list, BORDER, WALL_REMOVED)
