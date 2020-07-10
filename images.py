@@ -1,4 +1,5 @@
 import pygame
+import collision
 import random
 import os
 
@@ -110,30 +111,62 @@ class player_attack(pygame.sprite.Sprite):
         self.rect.x = POSx
         self.rect.y = POSy
         
-    def quadrant1(self, SLOPE):
-        self.rect.x += 3
-        self.rect.y -= 3 * SLOPE
+    def quadrant1(self, SLOPE, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.x += 3
+            self.rect.y -= 3 * SLOPE
 
-    def quadrant2(self, SLOPE):
-        self.rect.x -= 3
-        self.rect.y -= 3 * SLOPE
+    def quadrant2(self, SLOPE, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.x -= 3
+            self.rect.y -= 3 * SLOPE
     
-    def quadrant3(self, SLOPE):
-        self.rect.x -= 3
-        self.rect.y += 3 * SLOPE
+    def quadrant3(self, SLOPE, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.x -= 3
+            self.rect.y += 3 * SLOPE
 
-    def quadrant4(self, SLOPE):
-        self.rect.x += 3
-        self.rect.y += 3 * SLOPE
+    def quadrant4(self, SLOPE, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.x += 3
+            self.rect.y += 3 * SLOPE
 
-    def horizontalright(self, VEL):
-        self.rect.x += VEL
+    def horizontalright(self, VEL, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.x += VEL
 
-    def horizontalleft(self, VEL):
-        self.rect.x -= VEL
+    def horizontalleft(self, VEL, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.x -= VEL
 
-    def verticalup(self, VEL):
-        self.rect.y -= VEL
+    def verticalup(self, VEL, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.y -= VEL
 
-    def verticaldown(self, VEL):
-        self.rect.y += VEL
+    def verticaldown(self, VEL, mobs, attack, sprites_list):
+        if collision.attack_movement(mobs, attack)[0]:
+           sprites_list.remove(attack)
+           #mob loses hp
+        else:
+            self.rect.y += VEL

@@ -182,21 +182,21 @@ def play():
 
         for attack in attacks.keys():
             if attacks[attack][0] == "quadrant1":
-                attack.quadrant1(attacks[attack][1])
+                attack.quadrant1(attacks[attack][1], mobs, attack, sprites_list)
             elif attacks[attack][0] == "quadrant2":
-                attack.quadrant2(attacks[attack][1])
+                attack.quadrant2(attacks[attack][1], mobs, attack, sprites_list)
             elif attacks[attack][0] == "quadrant3":
-                attack.quadrant3(attacks[attack][1])
+                attack.quadrant3(attacks[attack][1], mobs, attack, sprites_list)
             elif attacks[attack][0] == "quadrant4":
-                attack.quadrant4(attacks[attack][1])
+                attack.quadrant4(attacks[attack][1], mobs, attack, sprites_list)
             elif attacks[attack][0] == "verticaldown":
-                attack.verticaldown(attacks[attack][1])
+                attack.verticaldown(attacks[attack][1], mobs, attack, sprites_list)
             elif attacks[attack][0] == "verticalup":
-                attack.verticalup(attacks[attack][1])
+                attack.verticalup(attacks[attack][1], mobs, attack, sprites_list)
             elif attacks[attack][0] == "horizontalright":
-                attack.horizontalright(attacks[attack][1])
+                attack.horizontalright(attacks[attack][1], mobs, attack, sprites_list)
             elif attacks[attack][0] == "horizontalleft":
-                attack.horizontalleft(attacks[attack][1])
+                attack.horizontalleft(attacks[attack][1], mobs, attack, sprites_list)
 
        # hp_loss = collision.movement(mobs, p1)
        # if hp_loss[0] == True:
