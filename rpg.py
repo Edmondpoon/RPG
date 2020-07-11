@@ -6,9 +6,11 @@ import random
 import time
 
 pygame.init()
-window = pygame.display.set_mode((500, 500))
+window = pygame.display.set_mode((650, 500))
 sprites_list = pygame.sprite.Group()
 
+WORD_FONT    = pygame.font.SysFont('comicsans', 40)
+HP_FONT    = pygame.font.SysFont('comicsans', 30)
 BORDER       = False
 WALL_REMOVED = False
 WIDTH        = 15
@@ -83,8 +85,18 @@ def remove_wall(sprites_list, WALL_REMOVED):
     WALL_REMOVED = True
 
 #creates the map
-def map(window, sprites_list, BORDER, WALL_REMOVED):
+def map(window, sprites_list, BORDER, WALL_REMOVED, player_hp):
     window.fill((255, 255, 255))
+    
+    pygame.draw.rect(window, (0, 0, 0), pygame.Rect((500, 0), (150, 500)))
+    pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 81), (110, 30)))
+    pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, 86), (100, 20)))
+
+    hp_bar = WORD_FONT.render("Player hp", True, (255, 255, 255))
+    window.blit(hp_bar, (510, 50))
+    hp = HP_FONT.render(str(player_hp) + " / 20", True, (200, 200, 200))
+    window.blit(hp, (545, 88))
+
     if BORDER == False:
         generate_wall(sprites_list, BORDER)
     sprites_list.draw(window)
@@ -100,11 +112,13 @@ def play():
     run      = True
     p1       = player()
     sprites_list.add(p1)
+
     while run:
         pygame.time.delay(50)
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False
+
         keys=pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             p1.move_left(VEL, p1, mobs)  
@@ -189,7 +203,7 @@ def play():
                 attack.horizontalleft(attacks[attack][1], mobs, attack, sprites_list)
 
         sprites_list.update()
-        map(window, sprites_list, BORDER, WALL_REMOVED)
+        map(window, sprites_list, BORDER, WALL_REMOVED, p1.hp)
         clock.tick(60)
 
     pygame.quit()
