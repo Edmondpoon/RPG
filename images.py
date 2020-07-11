@@ -54,26 +54,34 @@ class tree(pygame.sprite.Sprite):
         self.rect.x = POSx
         self.rect.y = POSy
 
-    def move_right(self, VEL):
-        if self.rect.x + VEL <= 433:
+    def move_right(self, VEL, player, mobs):
+        if collision.movement(mobs, player)[0]:
+            self.rect.x -= 2 * VEL
+        elif self.rect.x + VEL <= 433:
             self.rect.x += VEL
         elif self.rect.x + VEL > 433:
             self.rect.x = 433
 
-    def move_left(self, VEL):
-        if self.rect.x - VEL >= 38:
+    def move_left(self, VEL, player, mobs):
+        if collision.movement(mobs, player)[0]:
+            self.rect.x += 2 * VEL
+        elif self.rect.x - VEL >= 38:
             self.rect.x -= VEL
         elif self.rect.x - VEL < 38:
             self.rect.x = 38
 
-    def move_up(self, VEL):
-        if self.rect.y - VEL >= 38:
+    def move_up(self, VEL, player, mobs):
+        if collision.movement(mobs, player)[0]:
+            self.rect.y += 2 * VEL
+        elif self.rect.y - VEL >= 38:
             self.rect.y -= VEL
         elif self.rect.y - VEL < 38:
             self.rect.y = 38
 
-    def move_down(self, VEL):
-        if self.rect.y + VEL <= 417:
+    def move_down(self, VEL, player, mobs):
+        if collision.movement(mobs, player)[0]:
+            self.rect.y -= 2 * VEL
+        elif self.rect.y + VEL <= 417:
             self.rect.y += VEL
         elif self.rect.y + VEL > 417:
             self.rect.y = 417
