@@ -107,13 +107,13 @@ def play():
                 run=False
         keys=pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            p1.move_left(VEL)           
+            p1.move_left(VEL, p1, mobs)  
         if keys[pygame.K_RIGHT]:
-            p1.move_right(VEL)
+            p1.move_right(VEL, p1, mobs)
         if keys[pygame.K_UP]:
-            p1.move_up(VEL)
+            p1.move_up(VEL, p1, mobs)
         if keys[pygame.K_DOWN]:
-            p1.move_down(VEL)
+            p1.move_down(VEL, p1, mobs)
         
         if WAVES != 0 and mobs == []:
             WAVES -= 1
@@ -121,9 +121,6 @@ def play():
         #else:
             #for mob in mobs:
                 #mob.move(VEL)
-        
-        for attack in attacks.keys():
-            pass
 
         if pygame.mouse.get_pressed() == (True, False, False):
             position = pygame.mouse.get_pos()
@@ -135,7 +132,6 @@ def play():
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant4", SLOPE]
                 sprites_list.add(attack)            
-
             elif position[0] < p1.rect.x and position[1] < p1.rect.y:
                 #second quadrant
                 RUN   = p1.rect.x - position[0]
@@ -143,7 +139,6 @@ def play():
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant2", SLOPE]
                 sprites_list.add(attack)            
-
             elif position[0] < p1.rect.x and position[1] > p1.rect.y:
                 #third quadrant
                 RUN   = p1.rect.x - position[0]
@@ -151,30 +146,25 @@ def play():
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant3", SLOPE]
                 sprites_list.add(attack)            
-
             elif position[0] > p1.rect.x and position[1] < p1.rect.y: 
                 #first quadrant 
                 RUN   = position[0] - p1.rect.x
                 RISE  = p1.rect.y - position[1]
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant1", SLOPE]
-                sprites_list.add(attack)            
-                
+                sprites_list.add(attack)             
             elif position[0] == p1.rect.x and posision[1] > p1.rect.y:
                 #y-axis bottom
                 attacks[attack] = ["verticaldown", VEL]
                 sprites_list.add(attack)            
-
             elif position[0] == p1.rect.x and position[1] < p1.rect.y:
                 #y-axis top
                 attacks[attack] = ["verticalup", VEL]
                 sprites_list.add(attack)            
-
             elif position[0] > p1.rect.x and position[1] == p1.rect.y:
                 #x-axis right
                 attacks[attack] = ["horizontalright", VEL]
                 sprites_list.add(attack)            
-
             elif position[0] < p1.rect.x and position[1] == p1.rect.y:
                 #x-axis left
                 attacks[attack] = ["horizontalleft", VEL] 
@@ -198,11 +188,6 @@ def play():
             elif attacks[attack][0] == "horizontalleft":
                 attack.horizontalleft(attacks[attack][1], mobs, attack, sprites_list)
 
-       # hp_loss = collision.movement(mobs, p1)
-       # if hp_loss[0] == True:
-       #     hp_loss[1].hp -= 1
-       #     p1.hp -= 1
-            
         sprites_list.update()
         map(window, sprites_list, BORDER, WALL_REMOVED)
         clock.tick(60)
