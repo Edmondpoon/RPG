@@ -9,6 +9,7 @@ class mob(pygame.sprite.Sprite):
         hp     = {"W" : 10, "T" : 25}
         damage = {"W" : 3, "T" : 1}
         super().__init__()
+        self.maxhp  = hp[type_]
         self.hp     = hp[type_]
         self.damage = damage[type_]
         self.image  = pygame.Surface([width, height])
@@ -200,44 +201,80 @@ class player_attack(pygame.sprite.Sprite):
         self.rect.y = POSy
         
     def quadrant1(self, SLOPE, mobs, attack, sprites_list):
+        DELTAx     = 1 / SLOPE
+        multiplier = 1
+        if DELTAx < 1:
+            while not (SLOPE * multiplier > round(SLOPE * multiplier) - 0.1) and not (SLOPE * multiplier < round(SLOPE * multiplier) + 0.1):
+                multiplier +=1
+            DELTAx = multiplier
+            DELTAy = SLOPE * multiplier
+        else:
+            DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + 1 > 450 or self.rect.y - SLOPE < 38:
+        elif self.rect.x + DELTAx > 450 or self.rect.y - DELTAy < 38:
             sprites_list.remove(attack)
         else:
-            self.rect.x += 1
-            self.rect.y -= SLOPE
+            self.rect.x += round(DELTAx)
+            self.rect.y -= DELTAy
 
     def quadrant2(self, SLOPE, mobs, attack, sprites_list):
+        DELTAx = 1 / SLOPE
+        multiplier = 1
+        if DELTAx < 1:
+            while not (SLOPE * multiplier > round(SLOPE * multiplier) - 0.1) and not (SLOPE * multiplier < round(SLOPE * multiplier) + 0.1):
+                multiplier +=1
+            DELTAx = multiplier
+            DELTAy = SLOPE * multiplier
+        else:
+            DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x - 1 < 38 or self.rect.y - SLOPE < 38:
+        elif self.rect.x - DELTAx < 38 or self.rect.y - DELTAy < 38:
             sprites_list.remove(attack)
         else:
-            self.rect.x -= 1
-            self.rect.y -= SLOPE
+            self.rect.x -= round(DELTAx)
+            self.rect.y -= DELTAy
     
     def quadrant3(self, SLOPE, mobs, attack, sprites_list):
+        DELTAx = 1 / SLOPE
+        multiplier = 1
+        if DELTAx < 1:
+            while not (SLOPE * multiplier > round(SLOPE * multiplier) - 0.1) and not (SLOPE * multiplier < round(SLOPE * multiplier) + 0.1):
+                multiplier +=1
+            DELTAx = multiplier
+            DELTAy = SLOPE * multiplier
+        else:
+            DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x - 1 < 38 or self.rect.y + SLOPE > 452:
+        elif self.rect.x - DELTAx < 38 or self.rect.y + DELTAy > 452:
             sprites_list.remove(attack)
         else:
-            self.rect.x -= 1
-            self.rect.y += SLOPE
+            self.rect.x -= round(DELTAx)
+            self.rect.y += DELTAy
 
     def quadrant4(self, SLOPE, mobs, attack, sprites_list):
+        DELTAx = 1 / SLOPE
+        multiplier = 1
+        if DELTAx < 1:
+            while not (SLOPE * multiplier > round(SLOPE * multiplier) - 0.1) and not (SLOPE * multiplier < round(SLOPE * multiplier) + 0.1):
+                multiplier +=1
+            DELTAx = multiplier
+            DELTAy = SLOPE * multiplier
+        else:
+            DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + 1 > 450 or self.rect.y + SLOPE > 452:
+        elif self.rect.x + DELTAx > 450 or self.rect.y + DELTAy > 452:
             sprites_list.remove(attack)
         else:
-            self.rect.x += 1
-            self.rect.y += SLOPE
+            self.rect.x += round(DELTAx)
+            self.rect.y += DELTAy
 
     def horizontalright(self, SPEED, mobs, attack, sprites_list):
         if collision.attack_movement(mobs, attack)[0]:

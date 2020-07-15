@@ -33,7 +33,7 @@ def hp_changer(player, mob_attackers, player_attacks):
         player_attacks[attack].hp -= player.damage
 
 #creates the map
-def map(window, sprites_list, BORDER, player_hp):
+def map(window, sprites_list, BORDER, player_hp, mobs):
     window.fill((255, 255, 255))
 
     #draws black sidebar
@@ -42,7 +42,7 @@ def map(window, sprites_list, BORDER, player_hp):
     pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 81), (110, 30)))
 
     #changes the length of the player hp bar depedning on the player's hp
-    if int(player_hp) < 20 and int(player_hp) > 0:
+    if int(player_hp) <= 20 and int(player_hp) > 0:
         percentage = int(player_hp) / 20
         hp_size    = int( 100 * percentage)
         pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, 86), (hp_size, 20)))
@@ -53,11 +53,18 @@ def map(window, sprites_list, BORDER, player_hp):
         ending_text = WORD_FONT.render("You died", True, (255, 255, 255))
         window.blit(ending_text, (100, 200))
 
-    else:
-        pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, 86), (100, 20)))
-
 
     enemy_hp_bar = WORD_FONT.render("Enemy hp", True, (255, 255, 255))
+    window.blit(enemy_hp_bar, (510, 200))
+    placements    = [233, 273, 313, 353, 393, 433]
+    hp_placements = [238, 278, 318, 358, 398, 438]
+    for value in placements[:len(mobs)]:
+        pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, value), (110, 30)))
+    for mob in range(len(mobs)):
+        if int(mobs[mob].hp) <= mobs[mob].maxhp and int(mobs[mob].hp) > 0:
+            percentage = int(mobs[mob].hp) / mobs[mob].maxhp
+            hp_size    = int( 100 * percentage)
+            pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, hp_placements[mob]), (hp_size, 20)))
 
     if int(player_hp) > 0:
         hp_bar = WORD_FONT.render("Player hp", True, (255, 255, 255))
@@ -74,7 +81,7 @@ def map(window, sprites_list, BORDER, player_hp):
 def play():
     BORDER = 0
     mob_dict      = {}
-    WAVES         = 0
+    WAVES         = 1
     mobs          = []
     attacks       = {}
     run           = True
@@ -198,7 +205,7 @@ def play():
         sprites_list.update()
         hp_changer(p1, p1_hp_change, mob_hp_change)
 
-        BORDER = map(window, sprites_list, BORDER, p1.hp)
+        BORDER = map(window, sprites_list, BORDER, p1.hp, mobs)
         clock.tick(60)
 
     pygame.quit()
