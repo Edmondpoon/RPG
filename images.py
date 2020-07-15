@@ -203,7 +203,7 @@ class player_attack(pygame.sprite.Sprite):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + 1 > 433 or self.rect.y - SLOPE < 38:
+        elif self.rect.x + 1 > 450 or self.rect.y - SLOPE < 38:
             sprites_list.remove(attack)
         else:
             self.rect.x += 1
@@ -223,7 +223,7 @@ class player_attack(pygame.sprite.Sprite):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x - 1 < 38 or self.rect.y + SLOPE > 417:
+        elif self.rect.x - 1 < 38 or self.rect.y + SLOPE > 452:
             sprites_list.remove(attack)
         else:
             self.rect.x -= 1
@@ -233,7 +233,7 @@ class player_attack(pygame.sprite.Sprite):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + 1 > 433 or self.rect.y + SLOPE > 417:
+        elif self.rect.x + 1 > 450 or self.rect.y + SLOPE > 452:
             sprites_list.remove(attack)
         else:
             self.rect.x += 1
@@ -243,7 +243,7 @@ class player_attack(pygame.sprite.Sprite):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + SPEED> 433:
+        elif self.rect.x + SPEED> 450:
             sprites_list.remove(attack)
         else:
             self.rect.x += SPEED
@@ -270,7 +270,7 @@ class player_attack(pygame.sprite.Sprite):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.y + SPEED > 417:
+        elif self.rect.y + SPEED > 452:
             sprites_list.remove(attack)
         else:
             self.rect.y += SPEED
