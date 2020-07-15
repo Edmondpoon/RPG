@@ -106,7 +106,7 @@ class mob(pygame.sprite.Sprite):
 class tree(pygame.sprite.Sprite):
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
-        self.hp     = 20
+        self.hp     = 20000
         self.damage = 2
         self.image  = pygame.Surface([width, height])
         self.image.fill((255, 255, 255))
@@ -119,7 +119,7 @@ class tree(pygame.sprite.Sprite):
     def move_right(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.x - VEL >= 38:
-                self.rect.x -= VEL
+                self.rect.x -= 2 * VEL
             else:
                 self.rect.x = 38
         elif self.rect.x + VEL <= 433:
@@ -130,7 +130,7 @@ class tree(pygame.sprite.Sprite):
     def move_left(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.x + VEL <= 433:
-                self.rect.x += VEL
+                self.rect.x += 2 * VEL
             else:
                 self.rect.x = 433
         elif self.rect.x - VEL >= 38:
@@ -141,7 +141,7 @@ class tree(pygame.sprite.Sprite):
     def move_up(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.y + VEL <= 417:
-                self.rect.y += VEL
+                self.rect.y += 2 * VEL
             else:
                 self.rect.y = 417
         elif self.rect.y - VEL >= 38:
@@ -152,7 +152,7 @@ class tree(pygame.sprite.Sprite):
     def move_down(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.y - VEL >= 38:
-                self.rect.y -= VEL
+                self.rect.y -= 2 * VEL
             else:
                 self.rect.y = 38
         elif self.rect.y + VEL <= 417:
