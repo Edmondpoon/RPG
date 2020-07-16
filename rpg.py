@@ -79,13 +79,13 @@ def map(window, sprites_list, BORDER, player_hp, mobs):
     return 1
 
 def play():
-    BORDER = 0
-    mob_dict      = {}
-    WAVES         = 1
-    mobs          = []
-    attacks       = {}
-    run           = True
-    p1            = spawn.player()
+    BORDER   = 0
+    mob_dict = {}
+    WAVES    = 1
+    mobs     = []
+    attacks  = {}
+    run      = True
+    p1       = spawn.player()
     sprites_list.add(p1)
 
     while run:
@@ -94,8 +94,9 @@ def play():
             if event.type==pygame.QUIT:
                 run=False
 
-        p1_hp_change  = []
-        mob_hp_change = {}
+        attacks_remove = []
+        p1_hp_change   = []
+        mob_hp_change  = {}
 
         keys=pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -120,87 +121,103 @@ def play():
                    p1_hp_change.append(attack)
 
 
-        if pygame.mouse.get_pressed() == (True, False, False):
-            position = pygame.mouse.get_pos()
+        if keys[pygame.K_SPACE] and not len(attacks.keys()) >= 7:
             attack   = images.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y)
-            if position[0] > p1.rect.x and position[1] > p1.rect.y:
+            closest = [None, 1000000000]
+            for mob in mobs:
+                if mob.rect.x > p1.rect.x and mob.rect.y > p1.rect.y:
+                    if ((mob.rect.x - p1.rect.x) ** 2 + (mob.rect.y - p1.rect.y) ** 2) ** 0.5 < closest[1]:
+                        closest = [mob, ((mob.rect.x - p1.rect.x) ** 2 + (mob.rect.y - p1.rect.y) ** 2) ** 0.5]
+                elif mob.rect.x < p1.rect.x and mob.rect.y < p1.rect.y:
+                    if ((p1.rect.x - mob.rect.x) ** 2 + (p1.rect.y - mob.rect.y) ** 2) ** 0.5 < closest[1]:
+                        closest = [mob, ((p1.rect.x - mob.rect.x) ** 2 + (p1.rect.y - mob.rect.y) ** 2) ** 0.5]
+                elif mob.rect.x > p1.rect.x and mob.rect.y < p1.rect.y:
+                    if ((mob.rect.x - p1.rect.x) ** 2 + (p1.rect.y - mob.rect.y) ** 2) ** 0.5 < closest[1]:
+                        closest = [mob, ((mob.rect.x - p1.rect.x) ** 2 + (p1.rect.y - mob.rect.y) ** 2) ** 0.5]
+                elif mob.rect.x < p1.rect.x and mob.rect.y > p1.rect.y:
+                    if ((p1.rect.x - mob.rect.x) ** 2 + (mob.rect.y - p1.rect.y) ** 2) ** 0.5 < closest[1]:
+                        closest = [mob, ((p1.rect.x - mob.rect.x) ** 2 + (mob.rect.y - p1.rect.y) ** 2) ** 0.5]
+
+            if closest[0].rect.x > p1.rect.x and closest[0].rect.y > p1.rect.y:
                 #fourth quadrant
-                RUN   = position[0] - p1.rect.x
-                RISE  = position[1] - p1.rect.y
+                RUN   = closest[0].rect.x - p1.rect.x
+                RISE  = closest[0].rect.y - p1.rect.y
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant4", SLOPE]
                 sprites_list.add(attack)
-            elif position[0] < p1.rect.x and position[1] < p1.rect.y:
+            elif closest[0].rect.x < p1.rect.x and closest[0].rect.y < p1.rect.y:
                 #second quadrant
-                RUN   = p1.rect.x - position[0]
-                RISE  = p1.rect.y - position[1]
+                RUN   = p1.rect.x - closest[0].rect.x 
+                RISE  = p1.rect.y - closest[0].rect.y
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant2", SLOPE]
                 sprites_list.add(attack)
-            elif position[0] < p1.rect.x and position[1] > p1.rect.y:
+            elif closest[0].rect.x < p1.rect.x and closest[0].rect.y > p1.rect.y:
                 #third quadrant
-                RUN   = p1.rect.x - position[0]
-                RISE  = position[1] - p1.rect.y
+                RUN   = p1.rect.x - closest[0].rect.x
+                RISE  = closest[0].rect.y - p1.rect.y
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant3", SLOPE]
                 sprites_list.add(attack)
-            elif position[0] > p1.rect.x and position[1] < p1.rect.y:
+            elif closest[0].rect.x > p1.rect.x and closest[0].rect.y < p1.rect.y:
                 #first quadrant
-                RUN   = position[0] - p1.rect.x
-                RISE  = p1.rect.y - position[1]
+                RUN   = closest[0].rect.x - p1.rect.x
+                RISE  = p1.rect.y - closest[0].rect.y
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant1", SLOPE]
                 sprites_list.add(attack)
-            elif position[0] == p1.rect.x and position[1] > p1.rect.y:
+            elif closest[0].rect.x == p1.rect.x and closest[0].rect.y > p1.rect.y:
                 #y-axis bottom
                 attacks[attack] = ["verticaldown", 2]
                 sprites_list.add(attack)
-            elif position[0] == p1.rect.x and position[1] < p1.rect.y:
+            elif closest[0].rect.x == p1.rect.x and closest[0].rect.y < p1.rect.y:
                 #y-axis top
                 attacks[attack] = ["verticalup", 2]
                 sprites_list.add(attack)
-            elif position[0] > p1.rect.x and position[1] == p1.rect.y:
+            elif closest[0].rect.x > p1.rect.x and closest[0].rect.y == p1.rect.y:
                 #x-axis right
                 attacks[attack] = ["horizontalright", 2]
                 sprites_list.add(attack)
-            elif position[0] < p1.rect.x and position[1] == p1.rect.y:
+            elif closest[0].rect.x < p1.rect.x and closest[0].rect.y  == p1.rect.y:
                 #x-axis left
                 attacks[attack] = ["horizontalleft", 2]
                 sprites_list.add(attack)
 
         for attack in attacks.keys():
             if attacks[attack][0] == "quadrant1":
-                p1_attack = attack.quadrant1(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.quadrant1(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
             elif attacks[attack][0] == "quadrant2":
-                p1_attack = attack.quadrant2(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.quadrant2(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
             elif attacks[attack][0] == "quadrant3":
-                p1_attack = attack.quadrant3(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.quadrant3(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
             elif attacks[attack][0] == "quadrant4":
-                p1_attack = attack.quadrant4(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.quadrant4(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
             elif attacks[attack][0] == "verticaldown":
-                p1_attack = attack.verticaldown(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.verticaldown(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
             elif attacks[attack][0] == "verticalup":
-                p1_attack = attack.verticalup(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.verticalup(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
             elif attacks[attack][0] == "horizontalright":
-                p1_attack = attack.horizontalright(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.horizontalright(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
             elif attacks[attack][0] == "horizontalleft":
-                p1_attack = attack.horizontalleft(attacks[attack][1], mobs, attack, sprites_list)
+                p1_attack = attack.horizontalleft(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
                 if p1_attack != None:
                     mob_hp_change[attack] = p1_attack
+        for attack in attacks_remove:
+            attacks.pop(attack)
 
         sprites_list.update()
         hp_changer(p1, p1_hp_change, mob_hp_change)

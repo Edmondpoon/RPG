@@ -200,7 +200,7 @@ class player_attack(pygame.sprite.Sprite):
         self.rect.x = POSx
         self.rect.y = POSy
         
-    def quadrant1(self, SLOPE, mobs, attack, sprites_list):
+    def quadrant1(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx     = 1 / SLOPE
         multiplier = 1
         if DELTAx < 1:
@@ -212,14 +212,16 @@ class player_attack(pygame.sprite.Sprite):
             DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.x + DELTAx > 450 or self.rect.y - DELTAy < 38:
             sprites_list.remove(attack)
+            attacks_list.append(attack)
         else:
             self.rect.x += round(DELTAx)
             self.rect.y -= DELTAy
 
-    def quadrant2(self, SLOPE, mobs, attack, sprites_list):
+    def quadrant2(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx = 1 / SLOPE
         multiplier = 1
         if DELTAx < 1:
@@ -231,14 +233,16 @@ class player_attack(pygame.sprite.Sprite):
             DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.x - DELTAx < 38 or self.rect.y - DELTAy < 38:
             sprites_list.remove(attack)
+            attacks_list.append(attack) 
         else:
             self.rect.x -= round(DELTAx)
             self.rect.y -= DELTAy
     
-    def quadrant3(self, SLOPE, mobs, attack, sprites_list):
+    def quadrant3(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx = 1 / SLOPE
         multiplier = 1
         if DELTAx < 1:
@@ -250,14 +254,16 @@ class player_attack(pygame.sprite.Sprite):
             DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.x - DELTAx < 38 or self.rect.y + DELTAy > 452:
             sprites_list.remove(attack)
+            attacks_list.append(attack)
         else:
             self.rect.x -= round(DELTAx)
             self.rect.y += DELTAy
 
-    def quadrant4(self, SLOPE, mobs, attack, sprites_list):
+    def quadrant4(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx = 1 / SLOPE
         multiplier = 1
         if DELTAx < 1:
@@ -269,45 +275,55 @@ class player_attack(pygame.sprite.Sprite):
             DELTAy = 1
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.x + DELTAx > 450 or self.rect.y + DELTAy > 452:
             sprites_list.remove(attack)
+            attacks_list.append(attack)
         else:
             self.rect.x += round(DELTAx)
             self.rect.y += DELTAy
 
-    def horizontalright(self, SPEED, mobs, attack, sprites_list):
+    def horizontalright(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.x + SPEED> 450:
             sprites_list.remove(attack)
+            attacks_list.append(attack)
         else:
             self.rect.x += SPEED
 
-    def horizontalleft(self, SPEED, mobs, attack, sprites_list):
+    def horizontalleft(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.x - SPEED< 38:
             sprites_list.remove(attack)
+            attacks_list.append(attack)
         else:
             self.rect.x -= SPEED
 
-    def verticalup(self, SPEED,  mobs, attack, sprites_list):
+    def verticalup(self, SPEED,  mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.y - SPEED < 38:
             sprites_list.remove(attack)
+            attacks_list.append(attack)
         else:
             self.rect.y -= SPEED
 
-    def verticaldown(self, SPEED, mobs, attack, sprites_list):
+    def verticaldown(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
+           attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.y + SPEED > 452:
             sprites_list.remove(attack)
+            attacks_list.append(attack)
         else:
             self.rect.y += SPEED
