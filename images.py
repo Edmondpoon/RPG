@@ -301,7 +301,7 @@ class player_attack(pygame.sprite.Sprite):
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
-            self.rect.x += SPEED * 2
+            self.rect.x += SPEED 
 
     def horizontalleft(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
