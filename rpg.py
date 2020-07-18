@@ -1,4 +1,5 @@
 import os
+import store
 import images
 import collision
 import pygame
@@ -7,24 +8,19 @@ import time
 import spawn
 
 pygame.init()
-window = pygame.display.set_mode((650, 500))
+window       = pygame.display.set_mode((650, 500))
 sprites_list = pygame.sprite.Group()
+COSTS_FONT   = pygame.font.SysFont("comicsans", 20)
+MENU_FONT    = pygame.font.SysFont("comicsans", 30) 
 WORD_FONT    = pygame.font.SysFont('comicsans', 40)
 DEATH_FONT   = pygame.font.SysFont("comicsans", 100)
 HP_FONT      = pygame.font.SysFont('comicsans', 30)
+OPTIONS_FONT = pygame.font.SysFont("comicsans", 50)
+OPTIONS_FONT.set_underline(True)
 WIDTH        = 15
 HEIGHT       = 15
 VEL          = 5
 MOB_VEL      = 3
-
-#generates wall
-def generate_wall(sprites_list, BORDER):
-    left_wall   = images.side_wall(40, 10000, 0, 0)
-    right_wall  = images.side_wall(40, 500, 460, 0)
-    top_wall    = images.top_wall(500, 40, 0, 0)
-    bottom_wall = images.top_wall(40, 500, 0, 460)
-    for wall in [left_wall, right_wall, top_wall, bottom_wall]:
-        sprites_list.add(wall)
 
 def hp_changer(player, mob_attackers, player_attacks):
     for mob in mob_attackers:
@@ -32,60 +28,17 @@ def hp_changer(player, mob_attackers, player_attacks):
     for attack in player_attacks:
         player_attacks[attack].hp -= player.damage
 
-#creates the map
-def map(window, sprites_list, BORDER, player_hp, mobs):
-    window.fill((255, 255, 255))
-
-    #draws black sidebar
-    pygame.draw.rect(window, (0, 0, 0), pygame.Rect((500, 0), (150, 500)))
-    #draws the hp bar background
-    pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 81), (110, 30)))
-
-    #changes the length of the player hp bar depedning on the player's hp
-    if int(player_hp) <= 20 and int(player_hp) > 0:
-        percentage = int(player_hp) / 20
-        hp_size    = int( 100 * percentage)
-        pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, 86), (hp_size, 20)))
-
-        enemy_hp_bar = WORD_FONT.render("Enemy hp", True, (255, 255, 255))
-        window.blit(enemy_hp_bar, (510, 200))
-        placements    = [233, 273, 313, 353, 393, 433]
-        hp_placements = [238, 278, 318, 358, 398, 438]
-        for value in placements[:len(mobs)]:
-            pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, value), (110, 30)))
-        for mob in range(len(mobs)):
-            if int(mobs[mob].hp) <= mobs[mob].maxhp and int(mobs[mob].hp) > 0:
-                percentage = int(mobs[mob].hp) / mobs[mob].maxhp
-                hp_size    = int( 100 * percentage)
-                pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, hp_placements[mob]), (hp_size, 20)))
-
-        if int(player_hp) > 0:
-            hp_bar = WORD_FONT.render("Player hp", True, (255, 255, 255))
-            window.blit(hp_bar, (510, 50))
-            hp = HP_FONT.render(str(player_hp) + " / 20", True, (200, 200, 200))
-            window.blit(hp, (545, 88))
-
-    elif int(player_hp) <= 0:
-        for sprite in sprites_list:
-            sprite.kill()
-        window.fill((0, 0, 0))
-        ending_text = DEATH_FONT.render("You died", True, (255, 255, 255))
-        window.blit(ending_text, (175, 200))
-
-    if BORDER == 0:
-        generate_wall(sprites_list, BORDER)
-    sprites_list.draw(window)
-    pygame.display.flip()
-    return 1
-
 def play():
-    BORDER   = 0
-    mob_dict = {}
-    WAVES    = 2
-    mobs     = []
-    attacks  = {}
-    run      = True
-    p1       = spawn.player()
+    BORDER      = False
+    STORE       = False
+    STORE_ADDED = False
+    DEAD        = False
+    mob_dict    = {}
+    WAVES       = 2
+    mobs        = []
+    attacks     = {}
+    run         = True
+    p1          = spawn.player()
     sprites_list.add(p1)
 
     while run:
@@ -147,7 +100,7 @@ def play():
                 sprites_list.add(attack)
             elif closest[0] != None and closest[0].rect.x < p1.rect.x and closest[0].rect.y < p1.rect.y:
                 #second quadrant
-                RUN   = p1.rect.x - closest[0].rect.x 
+                RUN   = p1.rect.x - closest[0].rect.x
                 RISE  = p1.rect.y - closest[0].rect.y
                 SLOPE = RISE / RUN
                 attacks[attack] = ["quadrant2", SLOPE]
@@ -168,19 +121,19 @@ def play():
                 sprites_list.add(attack)
             elif closest[0] != None and closest[0].rect.x == p1.rect.x and closest[0].rect.y > p1.rect.y:
                 #y-axis bottom
-                attacks[attack] = ["verticaldown", 2]
+                attacks[attack] = ["verticaldown", 1]
                 sprites_list.add(attack)
             elif closest[0] != None and closest[0].rect.x == p1.rect.x and closest[0].rect.y < p1.rect.y:
                 #y-axis top
-                attacks[attack] = ["verticalup", 2]
+                attacks[attack] = ["verticalup", 1]
                 sprites_list.add(attack)
             elif closest[0] != None and closest[0].rect.x > p1.rect.x and closest[0].rect.y == p1.rect.y:
                 #x-axis right
-                attacks[attack] = ["horizontalright", 2]
+                attacks[attack] = ["horizontalright", 1]
                 sprites_list.add(attack)
             elif closest[0] != None and closest[0].rect.x < p1.rect.x and closest[0].rect.y  == p1.rect.y:
                 #x-axis left
-                attacks[attack] = ["horizontalleft", 2]
+                attacks[attack] = ["horizontalleft", 1]
                 sprites_list.add(attack)
 
         for attack in attacks.keys():
@@ -221,15 +174,35 @@ def play():
 
         sprites_list.update()
         hp_changer(p1, p1_hp_change, mob_hp_change)
-        
+
         for mob in mobs:
             if mob.hp <= 0:
                 mobs.remove(mob)
                 for sprite in sprites_list:
                     if sprite == mob:
                         sprite.kill()
-                
-        BORDER = map(window, sprites_list, BORDER, p1.hp, mobs)
+        
+        VARIABLES    = [BORDER, DEAD, STORE]
+        FONTS        = [WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT]
+        STORE_FONTS  = [COSTS_FONT, MENU_FONT]
+        BORDER, DEAD = spawn.map(window, sprites_list, p1.hp, mobs, VARIABLES, FONTS)
+
+        if DEAD:
+            if pygame.mouse.get_pressed() == (True, False, False):
+                position = pygame.mouse.get_pos()
+                if position[0] > 274 and position[0] < 363 and position[1] > 300 and position[1] < 337:
+                    STORE = True
+                elif position[0] > 234 and position[0] < 408 and position[1] > 370 and position[1] < 387:
+                    print("PLAY")
+
+        if STORE:
+            if STORE_ADDED == False:
+                for attack in store.generate_store(window, COSTS_FONT):
+                    sprites_list.add(attack)
+                STORE_ADDED == True
+            STORE, STORE_ADDED = store.maintain_store(window, sprites_list, STORE_FONTS)
+
+
         clock.tick(60)
 
     pygame.quit()

@@ -1,4 +1,5 @@
 import pygame
+import spawn
 import random
 import collision
 import images
@@ -52,3 +53,72 @@ def player():
     POSx = random.randint(38, 433)
     POSy = random.randint(38, 417)
     return images.tree(WIDTH, HEIGHT, POSx, POSy)
+
+#generates wall
+def generate_wall(sprites_list, BORDER):
+    left_wall   = images.side_wall(40, 10000, 0, 0)
+    right_wall  = images.side_wall(40, 500, 460, 0)
+    top_wall    = images.top_wall(500, 40, 0, 0)
+    bottom_wall = images.top_wall(40, 500, 0, 460)
+    for wall in [left_wall, right_wall, top_wall, bottom_wall]:
+        sprites_list.add(wall)
+
+#creates the map
+def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS):
+    BORDER, DEAD, STORE = VARIABLES
+    WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT = FONTS
+
+    if STORE == False:
+        window.fill((255, 255, 255))
+        #draws black sidebar
+        pygame.draw.rect(window, (0, 0, 0), pygame.Rect((500, 0), (150, 500)))
+        #draws the hp bar background
+        pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 81), (110, 30)))
+
+    #changes the length of the player hp bar depedning on the player's hp
+    if int(player_hp) <= 20 and int(player_hp) > 0:
+        percentage = int(player_hp) / 20
+        hp_size    = int( 100 * percentage)
+        pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, 86), (hp_size, 20)))
+
+        enemy_hp_bar = WORD_FONT.render("Enemy hp", True, (255, 255, 255))
+        window.blit(enemy_hp_bar, (510, 200))
+        background_placements = [233, 273, 313, 353, 393, 433]
+        hp_placements         = [238, 278, 318, 358, 398, 438]
+        hp_value_placements   = [240, 280, 320, 360, 400, 440]
+        for value in background_placements[:len(mobs)]:
+            pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, value), (110, 30)))
+        for mob in range(len(mobs)):
+            if int(mobs[mob].hp) <= mobs[mob].maxhp and int(mobs[mob].hp) > 0:
+                mob_hp = HP_FONT.render(str(mobs[mob].hp) + " / " + str(mobs[mob].maxhp), True, (200, 200, 200))
+                percentage = int(mobs[mob].hp) / mobs[mob].maxhp
+                hp_size    = int( 100 * percentage)
+                pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, hp_placements[mob]), (hp_size, 20)))
+                window.blit(mob_hp, (545, hp_value_placements[mob]))
+
+        if int(player_hp) > 0:
+            hp_bar = WORD_FONT.render("Player hp", True, (255, 255, 255))
+            window.blit(hp_bar, (510, 50))
+            hp = HP_FONT.render(str(player_hp) + " / 20", True, (200, 200, 200))
+            window.blit(hp, (545, 88))
+
+    elif int(player_hp) <= 0 and STORE == False:
+        for sprite in sprites_list:
+            sprite.kill()
+        window.fill((0, 0, 0))
+        ending_text     = DEATH_FONT.render("You died", True, (255, 255, 255))
+        store_text      = OPTIONS_FONT.render("Store", True, (255, 255, 255))
+        play_again_text = OPTIONS_FONT.render("Play again", True, (255, 255, 255))
+        pygame.draw.rect(window, (0, 0, 0), pygame.Rect((274, 300), (89, 37)))
+        pygame.draw.rect(window, (0, 0, 0), pygame.Rect((234, 370), (174, 37)))
+        window.blit(ending_text, (175, 100))
+        window.blit(store_text, (275, 300))
+        window.blit(play_again_text, (235, 370))
+        pygame.display.flip()
+        return True, True
+
+    if BORDER == False:
+        spawn.generate_wall(sprites_list, BORDER)
+    sprites_list.draw(window)
+    pygame.display.flip()
+    return True, False

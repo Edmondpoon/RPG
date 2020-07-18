@@ -209,7 +209,9 @@ class player_attack(pygame.sprite.Sprite):
             DELTAx = multiplier
             DELTAy = SLOPE * multiplier
         else:
-            DELTAy = 1
+            DELTAy = SLOPE * DELTAx
+            if DELTAy < 1:
+                DELTAy = 3
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            attacks_list.append(attack)
@@ -230,7 +232,9 @@ class player_attack(pygame.sprite.Sprite):
             DELTAx = multiplier
             DELTAy = SLOPE * multiplier
         else:
-            DELTAy = 1
+            DELTAy = SLOPE * DELTAx
+            if DELTAy < 1:
+                DELTAy = 3
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            attacks_list.append(attack)
@@ -251,7 +255,9 @@ class player_attack(pygame.sprite.Sprite):
             DELTAx = multiplier
             DELTAy = SLOPE * multiplier
         else:
-            DELTAy = 1
+            DELTAy = SLOPE * DELTAx
+            if DELTAy < 1:
+                DELTAy = 3
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            attacks_list.append(attack)
@@ -272,7 +278,9 @@ class player_attack(pygame.sprite.Sprite):
             DELTAx = multiplier
             DELTAy = SLOPE * multiplier
         else:
-            DELTAy = 1
+            DELTAy = SLOPE * DELTAx
+            if DELTAy < 1:
+                DELTAy = 3
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
            attacks_list.append(attack)
@@ -293,7 +301,7 @@ class player_attack(pygame.sprite.Sprite):
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
-            self.rect.x += SPEED
+            self.rect.x += SPEED * 2
 
     def horizontalleft(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
@@ -327,3 +335,18 @@ class player_attack(pygame.sprite.Sprite):
             attacks_list.append(attack)
         else:
             self.rect.y += SPEED
+
+
+
+class store_attacks(pygame.sprite.Sprite):
+    def __init__(self, width, height, POSx, POSy, attack):
+        super().__init__()
+        attacks    = ["attack1.png", "attack2.png", "attack3.png", "attack4.png", "attack5.png"]
+        self.image = pygame.Surface([width,height])
+        self.image.fill((255, 255, 255))
+        self.image.set_colorkey((255, 255, 255))
+        self.image  = pygame.image.load(os.path.join("imgs", attacks[attack]))
+        self.rect   = self.image.get_rect()
+        self.rect.x = POSx
+        self.rect.y = POSy
+
