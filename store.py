@@ -12,13 +12,18 @@ def generate_store(window, store_font):
     return attacks 
 
 def maintain_store(window, sprites_list, FONTS):
-    COSTS_FONT, MENU_FONT = FONTS
+    COSTS_FONT, MENU_FONT, PURCHASE_FONT = FONTS
     PRICES            = [10, 25, 50, 100, 500]
     PLACEMENTS        = [23, 153, 283, 413, 543]
     BUTTON_PLACEMENTS = [21, 151, 281, 411, 541]
     ATTACKS           = ["attack1", "attack2", "attack3", "attack4", "attack5"]   
+    
+    with open("coins.txt", mode = "r") as coins:
+        TOTAL_COINS = coins.readlines()
+        TOTAL_COINS = TOTAL_COINS[0].split(" ")
 
     MAINMENU_TEXT     = MENU_FONT.render("Main Menu", True, (0, 0, 0))
+    COINS_TEXT        = MENU_FONT.render("Total coins: " + str(TOTAL_COINS[0]), True, (0, 0, 0))
     PRICES_TEXT       = {}
     for attack in range(len(ATTACKS)):
         PRICES_TEXT[ATTACKS[attack]] = COSTS_FONT.render("Costs " + str(PRICES[attack]) + " coins", True, (0, 0, 0)) 
@@ -27,17 +32,32 @@ def maintain_store(window, sprites_list, FONTS):
     pygame.draw.rect(window, (255, 255, 255), pygame.Rect((15, 14), (108, 18)))
 
     window.blit(MAINMENU_TEXT, (15, 15))
+    window.blit(COINS_TEXT, (450, 15))
     for price in range(len(ATTACKS)):
         window.blit(PRICES_TEXT[ATTACKS[price]], (PLACEMENTS[price], 175))
+    
     with open("purchases.txt", mode = "r+") as purchases:
         purchasable = purchases.readlines()
-        purchasable =         purchasable[0].split(",")
+        purchasable = purchasable[0].split(" ")
     for attack in range(len(ATTACKS)):
         if "False" in purchasable[attack]:
             pygame.draw.ellipse(window, (200, 200, 200), pygame.Rect((BUTTON_PLACEMENTS[attack], 195), (100, 25))) 
+            PURCHASE_TEXT = PURCHASE_FONT.render("Purchase", True, (0, 0, 0))
+            window.blit(PURCHASE_TEXT, (BUTTON_PLACEMENTS[attack] + 13, 199))
         else:
-            #add a different buttton and color that says equip/equipped 
-            pass
+            pygame.draw.ellipse(window, (0, 0, 0), pygame.Rect((BUTTON_PLACEMENTS[attack], 195), (100, 25))) 
+
+    with open("equipped.txt", mode = "r+") as equip:
+        equipped = equip.readlines()
+        equipped = equipped[0].split(" ")
+    for attack in range(len(ATTACKS)):
+        if "True" in equipped[attack]:
+            EQUIPPED_TEXT = PURCHASE_FONT.render("Equipped", True, (255, 255, 255))
+            window.blit(EQUIPPED_TEXT, (BUTTON_PLACEMENTS[attack] + 13, 199))
+        elif "False" in equipped[attack]:
+            EQUIP_TEXT = PURCHASE_FONT.render("Equip", True, (255, 255, 255))
+            window.blit(EQUIP_TEXT, (BUTTON_PLACEMENTS[attack] + 28, 199))
+            
         
     sprites_list.draw(window)
     pygame.display.flip()
@@ -45,4 +65,35 @@ def maintain_store(window, sprites_list, FONTS):
         position = pygame.mouse.get_pos()
         if position[0] > 15 and position[0] < 123 and position[1] > 14 and position[1] < 32:
             return False, False
+        else:
+            for attack in range(len(ATTACKS)):
+                if position[0] > BUTTON_PLACEMENTS[attack] + 1 and position[0] < BUTTON_PLACEMENTS[attack] + 99 and position[1] > 196 and position[1] < 219:
+                    with open("equipped.txt", mode = "r+") as equip: 
+                        equipped = equip.readlines()
+                        equipped = equipped[0].split(" ")
+                        temp  = []
+                        temp2 = ""
+                        for item in equipped:
+                            temp.append(item)
+                        temp[attack] = "False"
+                        equip.truncate(0)
+                        for item in temp:
+                            temp2 += item + " "
+                        equip.write(temp2)
+                    with open("purchases.txt", mode = "r+") as purchases:
+                        purchasable = purchases.readlines()
+                        purchasable = purchasable[0].split(" ")
+                        temp  = []
+                        temp2 = ""
+                        for item in purchasable:
+                            temp.append(item)
+                        temp[attack] = "True"
+                        purchases.truncate(0)
+                        for item in temp:
+                            temp2 += item + " "
+                        purchases.write(temp2)
+
+
+
+    
     return True, True

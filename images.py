@@ -107,7 +107,7 @@ class mob(pygame.sprite.Sprite):
 class tree(pygame.sprite.Sprite):
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
-        self.hp     = 20
+        self.hp     = 0
         self.damage = 2
         self.image  = pygame.Surface([width, height])
         self.image.fill((255, 255, 255))

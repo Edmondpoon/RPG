@@ -8,19 +8,20 @@ import time
 import spawn
 
 pygame.init()
-window       = pygame.display.set_mode((650, 500))
-sprites_list = pygame.sprite.Group()
-COSTS_FONT   = pygame.font.SysFont("comicsans", 20)
-MENU_FONT    = pygame.font.SysFont("comicsans", 30) 
-WORD_FONT    = pygame.font.SysFont('comicsans', 40)
-DEATH_FONT   = pygame.font.SysFont("comicsans", 100)
-HP_FONT      = pygame.font.SysFont('comicsans', 30)
-OPTIONS_FONT = pygame.font.SysFont("comicsans", 50)
+window        = pygame.display.set_mode((650, 500))
+sprites_list  = pygame.sprite.Group()
+COSTS_FONT    = pygame.font.SysFont("comicsans", 20)
+PURCHASE_FONT = pygame.font.SysFont("comicsans", 25)
+MENU_FONT     = pygame.font.SysFont("comicsans", 30) 
+WORD_FONT     = pygame.font.SysFont('comicsans', 40)
+DEATH_FONT    = pygame.font.SysFont("comicsans", 100)
+HP_FONT       = pygame.font.SysFont('comicsans', 30)
+OPTIONS_FONT  = pygame.font.SysFont("comicsans", 50)
 OPTIONS_FONT.set_underline(True)
-WIDTH        = 15
-HEIGHT       = 15
-VEL          = 5
-MOB_VEL      = 3
+WIDTH         = 15
+HEIGHT        = 15
+VEL           = 5
+MOB_VEL       = 3
 
 def hp_changer(player, mob_attackers, player_attacks):
     for mob in mob_attackers:
@@ -184,7 +185,7 @@ def play():
         
         VARIABLES    = [BORDER, DEAD, STORE]
         FONTS        = [WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT]
-        STORE_FONTS  = [COSTS_FONT, MENU_FONT]
+        STORE_FONTS  = [COSTS_FONT, MENU_FONT, PURCHASE_FONT]
         BORDER, DEAD = spawn.map(window, sprites_list, p1.hp, mobs, VARIABLES, FONTS)
 
         if DEAD:
