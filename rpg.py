@@ -12,7 +12,7 @@ window        = pygame.display.set_mode((650, 500))
 sprites_list  = pygame.sprite.Group()
 COSTS_FONT    = pygame.font.SysFont("comicsans", 20)
 PURCHASE_FONT = pygame.font.SysFont("comicsans", 25)
-MENU_FONT     = pygame.font.SysFont("comicsans", 30) 
+MENU_FONT     = pygame.font.SysFont("comicsans", 30)
 WORD_FONT     = pygame.font.SysFont('comicsans', 40)
 DEATH_FONT    = pygame.font.SysFont("comicsans", 100)
 HP_FONT       = pygame.font.SysFont('comicsans', 30)
@@ -30,16 +30,16 @@ def hp_changer(player, mob_attackers, player_attacks):
         player_attacks[attack].hp -= player.damage
 
 def play():
-    BORDER      = False
-    STORE       = False
-    STORE_ADDED = False
-    DEAD        = False
-    mob_dict    = {}
-    WAVES       = 2
-    mobs        = []
-    attacks     = {}
-    run         = True
-    p1          = spawn.player()
+    BORDER       = False
+    STORE        = False
+    STORE_ADDED  = False
+    DEAD         = False
+    COINS_EARNED = 0
+    WAVES        = 0
+    mobs         = []
+    attacks      = {}
+    run          = True
+    p1           = spawn.player()
     sprites_list.add(p1)
 
     while run:
@@ -62,10 +62,10 @@ def play():
         if keys[pygame.K_DOWN]:
             p1.move_down(VEL, p1, mobs)
 
-        if WAVES != 0 and mobs == []:
-            WAVES -= 1
-            spawn.spawn_mobs(mobs, p1, sprites_list, mob_dict)
-        else:
+        if mobs == [] and DEAD == False:
+            WAVES +=1
+            spawn.spawn_mobs(mobs, p1, sprites_list)
+        elif DEAD == False:
             for mob in mobs:
                 entities = mobs[:]
                 entities.append(p1)
@@ -178,17 +178,19 @@ def play():
 
         for mob in mobs:
             if mob.hp <= 0:
+                COINS_EARNED = store.COINS(mob, COINS_EARNED)
                 mobs.remove(mob)
                 for sprite in sprites_list:
                     if sprite == mob:
                         sprite.kill()
-        
-        VARIABLES    = [BORDER, DEAD, STORE]
-        FONTS        = [WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT]
-        STORE_FONTS  = [COSTS_FONT, MENU_FONT, PURCHASE_FONT]
-        BORDER, DEAD = spawn.map(window, sprites_list, p1.hp, mobs, VARIABLES, FONTS)
+
+        VARIABLES                  = [BORDER, DEAD, STORE]
+        FONTS                      = [WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT]
+        STORE_FONTS                = [COSTS_FONT, MENU_FONT, PURCHASE_FONT]
+        BORDER, DEAD, COINS_EARNED = spawn.map(window, sprites_list, p1.hp, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES)
 
         if DEAD:
+            WAVES = 0
             if pygame.mouse.get_pressed() == (True, False, False):
                 position = pygame.mouse.get_pos()
                 if position[0] > 274 and position[0] < 363 and position[1] > 300 and position[1] < 337:
@@ -198,7 +200,8 @@ def play():
 
         if STORE:
             if STORE_ADDED == False:
-                for attack in store.generate_store(window, COSTS_FONT):
+                STORE_ATTACKS = store.generate_store(window, COSTS_FONT)
+                for attack in STORE_ATTACKS:
                     sprites_list.add(attack)
                 STORE_ADDED == True
             STORE, STORE_ADDED = store.maintain_store(window, sprites_list, STORE_FONTS)

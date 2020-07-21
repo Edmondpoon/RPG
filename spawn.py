@@ -8,7 +8,7 @@ WIDTH  = 15
 HEIGHT = 15
 
 #creates a wizard mob
-def wizard(mobs, player, mob_dict):
+def wizard(mobs, player):
     mob      = images.mob("W", WIDTH, HEIGHT)
     entities = mobs[:]
     entities.append(player)
@@ -39,12 +39,12 @@ def tank(mobs, player):
     return mob
 
 #spawns a random amount of wizards and tanks
-def spawn_mobs(mobs, player, sprites_list, mob_dict):
+def spawn_mobs(mobs, player, sprites_list):
     num_mobs = random.randint(1, 6)
     for mob in range(num_mobs):
         spawn = random.random()
         if spawn  <= 0.4:
-            sprites_list.add(wizard(mobs, player, mob_dict))
+            sprites_list.add(wizard(mobs, player))
         elif spawn < 1.0:
             sprites_list.add(tank(mobs, player))
 
@@ -64,8 +64,8 @@ def generate_wall(sprites_list, BORDER):
         sprites_list.add(wall)
 
 #creates the map
-def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS):
-    BORDER, DEAD, STORE = VARIABLES
+def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES):
+    BORDER, DEAD, STORE                          = VARIABLES
     WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT = FONTS
 
     if STORE == False:
@@ -103,6 +103,22 @@ def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS):
             window.blit(hp, (545, 88))
 
     elif int(player_hp) <= 0 and STORE == False:
+        with open("coins.txt", mode = "r+") as coins:
+            COIN  = coins.readlines()
+            COIN  = COIN[0].split(" ")
+            temp  = []
+            temp2 = ""
+            for item in range(3):
+                if item == 0:
+                    temp.append("PLACEHOLDER")
+                else:
+                    temp.append(COIN[item])
+            temp[1] = int(temp[1]) + COINS_EARNED + (5 * int(WAVES))
+            coins.truncate(0)
+            for item in temp:
+                temp2 += str(item) + " "
+            coins.write(temp2)
+
         for sprite in sprites_list:
             sprite.kill()
         window.fill((0, 0, 0))
@@ -115,10 +131,10 @@ def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS):
         window.blit(store_text, (275, 300))
         window.blit(play_again_text, (235, 370))
         pygame.display.flip()
-        return True, True
+        return True, True, 0
 
     if BORDER == False:
         spawn.generate_wall(sprites_list, BORDER)
     sprites_list.draw(window)
     pygame.display.flip()
-    return True, False
+    return True, False, COINS_EARNED

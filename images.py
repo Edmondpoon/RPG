@@ -17,7 +17,7 @@ class mob(pygame.sprite.Sprite):
         self.image.set_colorkey((255, 255, 255))
         self.image  = pygame.image.load(os.path.join("imgs", mobs[type_]))
         self.rect   = self.image.get_rect()
-    
+
 
     def move(self, VEL, entities, mob, player):
         DIRECTION = random.choice(["right", "left", "up", "down"])
@@ -107,7 +107,7 @@ class mob(pygame.sprite.Sprite):
 class tree(pygame.sprite.Sprite):
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
-        self.hp     = 0
+        self.hp     = 20
         self.damage = 2
         self.image  = pygame.Surface([width, height])
         self.image.fill((255, 255, 255))
@@ -199,7 +199,7 @@ class player_attack(pygame.sprite.Sprite):
         self.rect   = self.image.get_rect()
         self.rect.x = POSx
         self.rect.y = POSy
-        
+
     def quadrant1(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx     = 1 / SLOPE
         multiplier = 1
@@ -216,7 +216,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + DELTAx > 450 or self.rect.y - DELTAy < 38:
+        elif self.rect.x + DELTAx > 440 or self.rect.y - DELTAy < 38:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
@@ -241,11 +241,11 @@ class player_attack(pygame.sprite.Sprite):
            return collision.attack_movement(mobs, attack)[1]
         elif self.rect.x - DELTAx < 38 or self.rect.y - DELTAy < 38:
             sprites_list.remove(attack)
-            attacks_list.append(attack) 
+            attacks_list.append(attack)
         else:
             self.rect.x -= round(DELTAx)
             self.rect.y -= DELTAy
-    
+
     def quadrant3(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx = 1 / SLOPE
         multiplier = 1
@@ -285,7 +285,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + DELTAx > 450 or self.rect.y + DELTAy > 452:
+        elif self.rect.x + DELTAx > 440 or self.rect.y + DELTAy > 452:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
@@ -301,7 +301,7 @@ class player_attack(pygame.sprite.Sprite):
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
-            self.rect.x += SPEED 
+            self.rect.x += SPEED
 
     def horizontalleft(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
@@ -349,4 +349,3 @@ class store_attacks(pygame.sprite.Sprite):
         self.rect   = self.image.get_rect()
         self.rect.x = POSx
         self.rect.y = POSy
-
