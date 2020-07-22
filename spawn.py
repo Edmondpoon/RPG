@@ -34,19 +34,35 @@ def tank(mobs, player):
         mob.rect.x = random.randint(38, 433)
         mob.rect.y = random.randint(38, 417)
         FLAG = collision.Spawn(entities, mob)
+    mobs.append(mob)
+    return mob
 
+#creates a boss mob
+def boss(mobs, player):
+    mob      = images.mob("boss", WIDTH, HEIGHT)
+    entities = [player]
+    mob.rect.x          = random.randint(38, 433)
+    mob.rect.y          = random.randint(38, 417)
+    FLAG          = collision.Spawn(entities, mob)
+    while FLAG == True:
+        mob.rect.x = random.randint(38, 433)
+        mob.rect.y = random.randint(38, 417)
+        FLAG = collision.Spawn(entities, mob)
     mobs.append(mob)
     return mob
 
 #spawns a random amount of wizards and tanks
-def spawn_mobs(mobs, player, sprites_list):
-    num_mobs = random.randint(1, 6)
-    for mob in range(num_mobs):
-        spawn = random.random()
-        if spawn  <= 0.4:
-            sprites_list.add(wizard(mobs, player))
-        elif spawn < 1.0:
-            sprites_list.add(tank(mobs, player))
+def spawn_mobs(mobs, player, sprites_list, WAVES):
+    if WAVES % 5 != 0:
+        num_mobs = random.randint(1, 6)
+        for mob in range(num_mobs):
+            spawn = random.random()
+            if spawn  <= 0.4:
+                sprites_list.add(wizard(mobs, player))
+            elif spawn < 1.0:
+                sprites_list.add(tank(mobs, player))
+    else:
+        sprites_list.add(boss(mobs, player))
 
 #creates a player sprite
 def player():
@@ -74,10 +90,12 @@ def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, W
         pygame.draw.rect(window, (0, 0, 0), pygame.Rect((500, 0), (150, 500)))
         #draws the hp bar background
         pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 81), (110, 30)))
+        WAVE_TEXT = WORD_FONT.render("Current wave: " + str(WAVES), True, (255, 255, 255))
+        window.blit(WAVE_TEXT, (510, 100))
 
     #changes the length of the player hp bar depedning on the player's hp
-    if int(player_hp) <= 20 and int(player_hp) > 0:
-        percentage = int(player_hp) / 20
+    if int(player_hp) <= 50 and int(player_hp) > 0:
+        percentage = int(player_hp) / 50
         hp_size    = int( 100 * percentage)
         pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, 86), (hp_size, 20)))
 
@@ -94,12 +112,15 @@ def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, W
                 percentage = int(mobs[mob].hp) / mobs[mob].maxhp
                 hp_size    = int( 100 * percentage)
                 pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, hp_placements[mob]), (hp_size, 20)))
-                window.blit(mob_hp, (545, hp_value_placements[mob]))
+                if int(mobs[mob].maxhp) < 100:
+                    window.blit(mob_hp, (545, hp_value_placements[mob]))
+                else: 
+                    window.blit(mob_hp, (532, hp_value_placements[mob]))
 
         if int(player_hp) > 0:
             hp_bar = WORD_FONT.render("Player hp", True, (255, 255, 255))
             window.blit(hp_bar, (510, 50))
-            hp = HP_FONT.render(str(player_hp) + " / 20", True, (200, 200, 200))
+            hp = HP_FONT.render(str(player_hp) + " / 50", True, (200, 200, 200))
             window.blit(hp, (545, 88))
 
     elif int(player_hp) <= 0 and STORE == False:

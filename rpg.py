@@ -64,7 +64,7 @@ def play():
 
         if mobs == [] and DEAD == False:
             WAVES +=1
-            spawn.spawn_mobs(mobs, p1, sprites_list)
+            spawn.spawn_mobs(mobs, p1, sprites_list, WAVES)
         elif DEAD == False:
             for mob in mobs:
                 entities = mobs[:]
@@ -76,7 +76,7 @@ def play():
 
 
         if keys[pygame.K_SPACE] and not len(attacks.keys()) >= 7:
-            attack   = images.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y)
+            attack   = images.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y, p1)
             closest = [None, 1000000000]
             for mob in mobs:
                 if mob.rect.x > p1.rect.x and mob.rect.y > p1.rect.y:

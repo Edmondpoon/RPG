@@ -5,110 +5,127 @@ import os
 
 class mob(pygame.sprite.Sprite):
     def __init__(self, type_, width, height):
-        mobs   = {"W" : "wizard.jpg", "T" : "tank.jpg"}
-        hp     = {"W" : 10, "T" : 25}
-        damage = {"W" : 3, "T" : 1}
+        BOSS_image  = {"R" : "boss1.png", "K" : "boss3.png", "M" : "boss2.png"}
+        BOSS_hp     = {"R" : 150, "K" : 100, "M" : 75}
+        BOSS_damage = {"R" : 10, "K" : 20, "M" : 5}
+        mobs        = {"W" : "wizard.jpg", "T" : "tank.jpg"}
+        hp          = {"W" : 10, "T" : 25}
+        damage      = {"W" : 3, "T" : 1}
         super().__init__()
-        self.maxhp  = hp[type_]
-        self.hp     = hp[type_]
-        self.damage = damage[type_]
         self.image  = pygame.Surface([width, height])
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
-        self.image  = pygame.image.load(os.path.join("imgs", mobs[type_]))
+        if "boss" not in type_: 
+            self.maxhp  = hp[type_]
+            self.hp     = hp[type_]
+            self.damage = damage[type_]
+            self.image  = pygame.image.load(os.path.join("imgs", mobs[type_]))
+        else:
+            BOSS_TYPE   = random.choice(["R", "K", "M"])
+            self.maxhp  = BOSS_hp[BOSS_TYPE]
+            self.hp     = BOSS_hp[BOSS_TYPE]
+            self.damage = BOSS_damage[BOSS_TYPE]
+            self.image  = pygame.image.load(os.path.join("imgs", BOSS_image[BOSS_TYPE]))
         self.rect   = self.image.get_rect()
 
 
     def move(self, VEL, entities, mob, player):
+        BORDER_SIZE = {10 : [38, 433, 38, 412], 25 : [38, 423, 38, 420], 150 : [38, 358, 38, 49], 100 : [38, 377, 38, 347], 75 : [45, 348, 45,343]}
         DIRECTION = random.choice(["right", "left", "up", "down"])
         collide = collision.movement(entities, mob)
         if DIRECTION == "right":
             if collide[0]:
                 if collide[1] != player:
-                    if self.rect.x - VEL >= 38:
+                    if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
                         self.rect.x -= 2 * VEL
                     else:
-                        self.rect.x = 38
+                        self.rect.x = BORDER_SIZE[mob.maxhp][0]
                 else:
-                    if self.rect.x - VEL >= 38:
+                    if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
                         self.rect.x -= 2 * VEL
                         return mob
                     else:
-                        self.rect.x = 38
+                        self.rect.x = BORDER_SIZE[mob.maxhp][0]
                         return mob
             else:
-                if self.rect.x + VEL <= 433:
+                if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
                     self.rect.x += VEL
                 else:
-                    self.rect.x = 433
+                    self.rect.x = BORDER_SIZE[mob.maxhp][1]
 
         elif DIRECTION == "left":
             if collide[0]:
                 if collide[1] != player:
-                    if self.rect.x + VEL <= 433:
+                    if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
                         self.rect.x += 2 * VEL
                     else:
-                        self.rect.x = 433
+                        self.rect.x = BORDER_SIZE[mob.maxhp][1]
                 else:
-                    if self.rect.x + VEL <= 433:
+                    if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
                         self.rect.x += 2 * VEL
                         return mob
                     else:
-                        self.rect.x = 433
+                        self.rect.x = BORDER_SIZE[mob.maxhp][1]
                         return mob
             else:
-                if self.rect.x -  VEL >= 38:
+                if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
                     self.rect.x -= VEL
                 else:
-                    self.rect.x = 38
+                    self.rect.x = BORDER_SIZE[mob.maxhp][0]
 
         if DIRECTION == "up":
             if collide[0]:
                 if collide[1] != player:
-                    if self.rect.y + VEL <= 417:
+                    if self.rect.y + VEL <= BORDER_SIZE[mob.maxhp][3]:
                         self.rect.y += 2 * VEL
                     else:
-                        self.rect.y = 417
+                        self.rect.y = BORDER_SIZE[mob.maxhp][3]
                 else:
-                    if self.rect.y + VEL <= 417:
+                    if self.rect.y + VEL <= BORDER_SIZE[mob.maxhp][3]:
                         self.rect.y += 2 * VEL
                         return mob
                     else:
-                        self.rect.y = 417
+                        self.rect.y = BORDER_SIZE[mob.maxhp][3]
                         return mob
             else:
-                if self.rect.y - VEL >= 38:
+                if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
                     self.rect.y -= VEL
                 else:
-                    self.rect.y = 38
+                    self.rect.y = BORDER_SIZE[mob.maxhp][2]
 
         elif DIRECTION == "down":
             if collide[0]:
                 if collide[1] != player:
-                    if self.rect.y - VEL >= 38:
+                    if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
                         self.rect.y -= 2 * VEL
                     else:
-                        self.rect.y = 38
+                        self.rect.y = BORDER_SIZE[mob.maxhp][2]
                 else:
-                    if self.rect.y - VEL >= 38:
+                    if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
                         self.rect.y -= 2 * VEL
                         return mob
                     else:
-                        self.rect.y = 38
+                        self.rect.y = BORDER_SIZE[mob.maxhp][2]
                         return mob
             else:
-                if self.rect.y +  VEL <= 417:
+                if self.rect.y +  VEL <= BORDER_SIZE[mob.maxhp][3]:
                     self.rect.y += VEL
                 else:
-                    self.rect.y = 417
+                    self.rect.y = BORDER_SIZE[mob.maxhp][3]
 
 
 
 class tree(pygame.sprite.Sprite):
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
-        self.hp     = 20
-        self.damage = 2
+        DAMAGE = [2, 5, 7, 10, 15]
+        with open("equipped.txt", mode = "r") as equip:
+            EQUIP = equip.readlines()
+            EQUIP = EQUIP[0].split(" ")
+            for item in range(len(EQUIP)):
+                if "True" in EQUIP[item]:
+                    self.damage = DAMAGE[item - 1]
+        self.hp     = 50
         self.image  = pygame.Surface([width, height])
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
@@ -123,17 +140,17 @@ class tree(pygame.sprite.Sprite):
                 self.rect.x -= 2 * VEL
             else:
                 self.rect.x = 38
-        elif self.rect.x + VEL <= 433:
+        elif self.rect.x + VEL <= 428:
             self.rect.x += VEL
-        elif self.rect.x + VEL > 433:
-            self.rect.x = 433
+        elif self.rect.x + VEL > 428:
+            self.rect.x = 428
 
     def move_left(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
-            if self.rect.x + VEL <= 433:
+            if self.rect.x + VEL <= 428:
                 self.rect.x += 2 * VEL
             else:
-                self.rect.x = 433
+                self.rect.x = 428
         elif self.rect.x - VEL >= 38:
             self.rect.x -= VEL
         elif self.rect.x - VEL < 38:
@@ -141,10 +158,10 @@ class tree(pygame.sprite.Sprite):
 
     def move_up(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
-            if self.rect.y + VEL <= 417:
+            if self.rect.y + VEL <= 413:
                 self.rect.y += 2 * VEL
             else:
-                self.rect.y = 417
+                self.rect.y = 413
         elif self.rect.y - VEL >= 38:
             self.rect.y -= VEL
         elif self.rect.y - VEL < 38:
@@ -156,10 +173,10 @@ class tree(pygame.sprite.Sprite):
                 self.rect.y -= 2 * VEL
             else:
                 self.rect.y = 38
-        elif self.rect.y + VEL <= 417:
+        elif self.rect.y + VEL <= 413:
             self.rect.y += VEL
-        elif self.rect.y + VEL > 417:
-            self.rect.y = 417
+        elif self.rect.y + VEL > 413:
+            self.rect.y = 413
 
 
 
@@ -190,12 +207,13 @@ class top_wall(pygame.sprite.Sprite):
 
 
 class player_attack(pygame.sprite.Sprite):
-    def __init__(self, width, height, POSx, POSy):
+    def __init__(self, width, height, POSx, POSy, player):
         super().__init__()
-        self.image = pygame.Surface([width,height])
+        ATTACK_IMAGES = {2 : "attack_1.png", 5 : "attack_2.png", 7 : "attack_3.png", 10 : "attack_4.png", 15 : "attack_5.png"}
+        self.image    = pygame.Surface([width,height])
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
-        self.image  = pygame.image.load(os.path.join("imgs", "attack.png"))
+        self.image  = pygame.image.load(os.path.join("imgs", ATTACK_IMAGES[player.damage]))
         self.rect   = self.image.get_rect()
         self.rect.x = POSx
         self.rect.y = POSy
@@ -216,7 +234,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + DELTAx > 440 or self.rect.y - DELTAy < 38:
+        elif self.rect.x + DELTAx > 434 or self.rect.y - DELTAy < 38:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
@@ -262,7 +280,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x - DELTAx < 38 or self.rect.y + DELTAy > 452:
+        elif self.rect.x - DELTAx < 38 or self.rect.y + DELTAy > 437:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
@@ -285,7 +303,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + DELTAx > 440 or self.rect.y + DELTAy > 452:
+        elif self.rect.x + DELTAx > 434 or self.rect.y + DELTAy > 437:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
@@ -297,7 +315,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x + SPEED> 450:
+        elif self.rect.x + SPEED > 434:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
@@ -308,7 +326,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.x - SPEED< 38:
+        elif self.rect.x - SPEED < 38:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:
@@ -330,7 +348,7 @@ class player_attack(pygame.sprite.Sprite):
            sprites_list.remove(attack)
            attacks_list.append(attack)
            return collision.attack_movement(mobs, attack)[1]
-        elif self.rect.y + SPEED > 452:
+        elif self.rect.y + SPEED > 437:
             sprites_list.remove(attack)
             attacks_list.append(attack)
         else:

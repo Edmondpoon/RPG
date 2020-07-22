@@ -5,7 +5,7 @@ WIDTH      = 15
 HEIGHT     = 15
 
 def COINS(mob, TOTAL_COINS):
-    VALUES = {"10": 2, "25" : 1, "100": 10}
+    VALUES = {"10": 2, "25" : 1, "100": 10, "75" : 10, "150" : 10}
     TOTAL_COINS += VALUES[str(mob.maxhp)]
     return TOTAL_COINS
 
@@ -19,6 +19,7 @@ def generate_store(window, store_font):
 def maintain_store(window, sprites_list, FONTS):
     COSTS_FONT, MENU_FONT, PURCHASE_FONT = FONTS
     PRICES            = [10, 25, 50, 100, 500]
+    DAMAGES           = [2, 5, 7, 10, 15]
     PLACEMENTS        = [23, 153, 283, 413, 543]
     BUTTON_PLACEMENTS = [21, 151, 281, 411, 541]
     ATTACKS           = ["attack1", "attack2", "attack3", "attack4", "attack5"]
@@ -30,27 +31,30 @@ def maintain_store(window, sprites_list, FONTS):
     MAINMENU_TEXT     = MENU_FONT.render("Main Menu", True, (0, 0, 0))
     COINS_TEXT        = MENU_FONT.render("Total coins: " + str(TOTAL_COINS[1]), True, (0, 0, 0))
     PRICES_TEXT       = {}
+    DAMAGES_TEXT       = {}
     for attack in range(len(ATTACKS)):
-        PRICES_TEXT[ATTACKS[attack]] = COSTS_FONT.render("Costs " + str(PRICES[attack]) + " coins", True, (0, 0, 0))
+        PRICES_TEXT[ATTACKS[attack]]  = COSTS_FONT.render("Costs " + str(PRICES[attack]) + " coins", True, (0, 0, 0))    
+        DAMAGES_TEXT[ATTACKS[attack]] = COSTS_FONT.render("Does " + str(DAMAGES[attack]) + " damage", True, (0, 0, 0)) 
 
     window.fill((255, 255, 255))
     pygame.draw.rect(window, (255, 255, 255), pygame.Rect((15, 14), (108, 18)))
 
     window.blit(MAINMENU_TEXT, (15, 15))
     window.blit(COINS_TEXT, (450, 15))
-    for price in range(len(ATTACKS)):
-        window.blit(PRICES_TEXT[ATTACKS[price]], (PLACEMENTS[price], 175))
+    for attack in range(len(ATTACKS)):
+        window.blit(PRICES_TEXT[ATTACKS[attack]], (PLACEMENTS[attack], 175))
+        window.blit(DAMAGES_TEXT[ATTACKS[attack]], (PLACEMENTS[attack], 189))
 
     with open("purchases.txt", mode = "r+") as purchases:
         purchasable = purchases.readlines()
         purchasable = purchasable[0].split(" ")
     for attack in range(len(ATTACKS)):
         if "False" in purchasable[attack + 1]:
-            pygame.draw.ellipse(window, (200, 200, 200), pygame.Rect((BUTTON_PLACEMENTS[attack], 195), (100, 25)))
+            pygame.draw.ellipse(window, (200, 200, 200), pygame.Rect((BUTTON_PLACEMENTS[attack], 207), (100, 25)))
             PURCHASE_TEXT = PURCHASE_FONT.render("Purchase", True, (0, 0, 0))
-            window.blit(PURCHASE_TEXT, (BUTTON_PLACEMENTS[attack] + 13, 199))
+            window.blit(PURCHASE_TEXT, (BUTTON_PLACEMENTS[attack] + 13, 211))
         else:
-            pygame.draw.ellipse(window, (0, 0, 0), pygame.Rect((BUTTON_PLACEMENTS[attack], 195), (100, 25)))
+            pygame.draw.ellipse(window, (0, 0, 0), pygame.Rect((BUTTON_PLACEMENTS[attack], 207), (100, 25)))
 
     with open("equipped.txt", mode = "r+") as equip:
         equipped = equip.readlines()
@@ -58,10 +62,10 @@ def maintain_store(window, sprites_list, FONTS):
     for attack in range(len(ATTACKS)):
         if "True" in equipped[attack + 1]:
             EQUIPPED_TEXT = PURCHASE_FONT.render("Equipped", True, (255, 255, 255))
-            window.blit(EQUIPPED_TEXT, (BUTTON_PLACEMENTS[attack] + 13, 199))
+            window.blit(EQUIPPED_TEXT, (BUTTON_PLACEMENTS[attack] + 13, 211))
         elif "False" in equipped[attack + 1]:
             EQUIP_TEXT = PURCHASE_FONT.render("Equip", True, (255, 255, 255))
-            window.blit(EQUIP_TEXT, (BUTTON_PLACEMENTS[attack] + 28, 199))
+            window.blit(EQUIP_TEXT, (BUTTON_PLACEMENTS[attack] + 28, 211))
 
 
     sprites_list.draw(window)
@@ -117,7 +121,23 @@ def maintain_store(window, sprites_list, FONTS):
                                     temp2 += item + " "
                                 purchases.write(temp2)
 
-
+                        elif "True" in purchasable[attack + 1]:
+                            with open("equipped.txt", mode = "r+") as equip:
+                                EQUIP = equip.readlines()
+                                EQUIP = EQUIP[0].split(" ")
+                                if "False" in EQUIP[attack + 1]:
+                                    temp  = []
+                                    temp2 = ""
+                                    for item in equipped:
+                                        temp.append(item)
+                                    for item in range(len(temp)):
+                                        if "True" in temp[item]:
+                                            temp[item] = "False"
+                                    temp[attack + 1] = "True"
+                                    equip.truncate(0)
+                                    for item in temp:
+                                        temp2 += item + " "
+                                    equip.write(temp2)
 
 
     return True, True
