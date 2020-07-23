@@ -82,7 +82,7 @@ def generate_wall(sprites_list, BORDER):
 #creates the map
 def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES):
     BORDER, DEAD, STORE                          = VARIABLES
-    WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT = FONTS
+    WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT, FONT_25 = FONTS
 
     if STORE == False:
         window.fill((255, 255, 255))
@@ -90,8 +90,8 @@ def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, W
         pygame.draw.rect(window, (0, 0, 0), pygame.Rect((500, 0), (150, 500)))
         #draws the hp bar background
         pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 81), (110, 30)))
-        WAVE_TEXT = WORD_FONT.render("Current wave: " + str(WAVES), True, (255, 255, 255))
-        window.blit(WAVE_TEXT, (510, 100))
+        WAVE_TEXT = FONT_25.render("Current wave: " + str(WAVES), True, (200, 200, 200))
+        window.blit(WAVE_TEXT, (510, 20))
 
     #changes the length of the player hp bar depedning on the player's hp
     if int(player_hp) <= 50 and int(player_hp) > 0:

@@ -33,85 +33,278 @@ class mob(pygame.sprite.Sprite):
         BORDER_SIZE = {10 : [38, 433, 38, 412], 25 : [38, 423, 38, 420], 150 : [38, 358, 38, 49], 100 : [38, 377, 38, 347], 75 : [45, 348, 45,343]}
         DIRECTION = random.choice(["right", "left", "up", "down"])
         collide = collision.movement(entities, mob)
-        if DIRECTION == "right":
-            if collide[0]:
-                if collide[1] != player:
+        if random.random() <= 0.30:
+            RISE = mob.rect.y - player.rect.y
+            RUN  = mob.rect.x - player.rect.x
+            if RISE / RUN < 0 and RUN > 1:
+                if RISE > 0:
+                    RUN = player.rect.x - mob.rect.x
+                    SLOPE = RISE / RUN
+                    if collide[0]:
+                        if collide[1] != player:
+                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x -= 3
+                                self.rect.y += SLOPE * 3
+                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                            elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                        else:
+                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x -= 3
+                                self.rect.y += SLOPE * 3
+                                return mob
+                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                                return mob
+                            elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                                return mob
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                                return mob
+                    else:
+                        if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            self.rect.x += 3
+                            self.rect.y -= 3 * SLOPE
+                        elif self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1]:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][1] 
+                        elif self.rect.y - (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][2]:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                            self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                else: 
+                    RISE = player.rect.y - mob.rect.y
+                    SLOPE = RISE / RUN
+                    if collide[0]:
+                        if collide[1] != player:
+                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.x += 3
+                                self.rect.y -= SLOPE * 3
+                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                            elif self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                        else:
+                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.x += 3
+                                self.rect.y -= SLOPE * 3
+                                return mob
+                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                                return mob
+                            elif self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                                return mob
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                                return mob
+                    else:
+                        if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.x -= 3
+                            self.rect.y += 3 * SLOPE
+                        elif self.rect.x - 3 <= BORDER_SIZE[mob.maxhp][0]:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][0] 
+                        elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                            self.rect.y = BORDER_SIZE[mob.maxhp][3]
+            elif  RISE / RUN > 0 and RUN > 1:
+                if RISE > 0:
+                    SLOPE = RISE / RUN
+                    if collide[0]:
+                        if collide[1] != player:
+                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x += 3
+                                self.rect.y += SLOPE * 3
+                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                            elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][1]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                        else:
+                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x += 3
+                                self.rect.y += SLOPE * 3
+                                return mob
+                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                                return mob
+                            elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][1]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                                return mob
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                                return mob
+                    else:
+                        if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            self.rect.x -= 3
+                            self.rect.y -= 3 * SLOPE
+                        elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][0] 
+                        elif self.rect.y - (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][2]:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                            self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                else: 
+                    SLOPE = RISE / RUN
+                    if collide[0]:
+                        if collide[1] != player:
+                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.x -= 3
+                                self.rect.y -= SLOPE * 3
+                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                            elif self.rect.x - 3 <= BORDER_SIZE[mob.maxhp][0]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                        else:
+                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.x -= 3
+                                self.rect.y -= SLOPE * 3
+                                return mob
+                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                                return mob
+                            elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                                return mob
+                            else:
+                                self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                                self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                                return mob
+                    else:
+                        if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.x += 3
+                            self.rect.y += 3 * SLOPE
+                        elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][1]:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][1] 
+                        elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                            self.rect.y = BORDER_SIZE[mob.maxhp][3]
+            elif RUN != 0 and RUN <= 1:
+                pass
+            else:
+                random_movement = random.random()
+                if random_movement < 0.25:
+                    if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
+                        self.rect.y -= VEL
+                    else:
+                        self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                elif random_movement < 0.50:
+                    if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
+                        self.rect.x += VEL
+                    else:
+                        self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                elif random_movement < 0.75:
                     if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
-                        self.rect.x -= 2 * VEL
+                        self.rect.x -= VEL
                     else:
                         self.rect.x = BORDER_SIZE[mob.maxhp][0]
                 else:
+                    if self.rect.y +  VEL <= BORDER_SIZE[mob.maxhp][3]:
+                        self.rect.y += VEL
+                    else:
+                        self.rect.y = BORDER_SIZE[mob.maxhp][3]
+
+        else:
+            if DIRECTION == "right":
+                if collide[0]:
+                    if collide[1] != player:
+                        if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
+                            self.rect.x -= 2 * VEL
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                    else:
+                        if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
+                            self.rect.x -= 2 * VEL
+                            return mob
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][0]
+                            return mob
+                else:
+                    if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
+                        self.rect.x += VEL
+                    else:
+                        self.rect.x = BORDER_SIZE[mob.maxhp][1]
+
+            elif DIRECTION == "left":
+                if collide[0]:
+                    if collide[1] != player:
+                        if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
+                            self.rect.x += 2 * VEL
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                    else:
+                        if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
+                            self.rect.x += 2 * VEL
+                            return mob
+                        else:
+                            self.rect.x = BORDER_SIZE[mob.maxhp][1]
+                            return mob
+                else:
                     if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
-                        self.rect.x -= 2 * VEL
-                        return mob
+                        self.rect.x -= VEL
                     else:
                         self.rect.x = BORDER_SIZE[mob.maxhp][0]
-                        return mob
-            else:
-                if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
-                    self.rect.x += VEL
-                else:
-                    self.rect.x = BORDER_SIZE[mob.maxhp][1]
 
-        elif DIRECTION == "left":
-            if collide[0]:
-                if collide[1] != player:
-                    if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
-                        self.rect.x += 2 * VEL
+            if DIRECTION == "up":
+                if collide[0]:
+                    if collide[1] != player:
+                        if self.rect.y + VEL <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.y += 2 * VEL
+                        else:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][3]
                     else:
-                        self.rect.x = BORDER_SIZE[mob.maxhp][1]
-                else:
-                    if self.rect.x + VEL <= BORDER_SIZE[mob.maxhp][1]:
-                        self.rect.x += 2 * VEL
-                        return mob
-                    else:
-                        self.rect.x = BORDER_SIZE[mob.maxhp][1]
-                        return mob
-            else:
-                if self.rect.x - VEL >= BORDER_SIZE[mob.maxhp][0]:
-                    self.rect.x -= VEL
-                else:
-                    self.rect.x = BORDER_SIZE[mob.maxhp][0]
-
-        if DIRECTION == "up":
-            if collide[0]:
-                if collide[1] != player:
-                    if self.rect.y + VEL <= BORDER_SIZE[mob.maxhp][3]:
-                        self.rect.y += 2 * VEL
-                    else:
-                        self.rect.y = BORDER_SIZE[mob.maxhp][3]
-                else:
-                    if self.rect.y + VEL <= BORDER_SIZE[mob.maxhp][3]:
-                        self.rect.y += 2 * VEL
-                        return mob
-                    else:
-                        self.rect.y = BORDER_SIZE[mob.maxhp][3]
-                        return mob
-            else:
-                if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
-                    self.rect.y -= VEL
-                else:
-                    self.rect.y = BORDER_SIZE[mob.maxhp][2]
-
-        elif DIRECTION == "down":
-            if collide[0]:
-                if collide[1] != player:
-                    if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
-                        self.rect.y -= 2 * VEL
-                    else:
-                        self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                        if self.rect.y + VEL <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.y += 2 * VEL
+                            return mob
+                        else:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                            return mob
                 else:
                     if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
-                        self.rect.y -= 2 * VEL
-                        return mob
+                        self.rect.y -= VEL
                     else:
                         self.rect.y = BORDER_SIZE[mob.maxhp][2]
-                        return mob
-            else:
-                if self.rect.y +  VEL <= BORDER_SIZE[mob.maxhp][3]:
-                    self.rect.y += VEL
+
+            elif DIRECTION == "down":
+                if collide[0]:
+                    if collide[1] != player:
+                        if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
+                            self.rect.y -= 2 * VEL
+                        else:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                    else:
+                        if self.rect.y - VEL >= BORDER_SIZE[mob.maxhp][2]:
+                            self.rect.y -= 2 * VEL
+                            return mob
+                        else:
+                            self.rect.y = BORDER_SIZE[mob.maxhp][2]
+                            return mob
                 else:
-                    self.rect.y = BORDER_SIZE[mob.maxhp][3]
+                    if self.rect.y +  VEL <= BORDER_SIZE[mob.maxhp][3]:
+                        self.rect.y += VEL
+                    else:
+                        self.rect.y = BORDER_SIZE[mob.maxhp][3]
 
 
 
@@ -119,12 +312,14 @@ class tree(pygame.sprite.Sprite):
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
         DAMAGE = [2, 5, 7, 10, 15]
+        damage = 0
         with open("equipped.txt", mode = "r") as equip:
             EQUIP = equip.readlines()
             EQUIP = EQUIP[0].split(" ")
             for item in range(len(EQUIP)):
                 if "True" in EQUIP[item]:
-                    self.damage = DAMAGE[item - 1]
+                    damage = item - 1
+        self.damage = DAMAGE[damage]
         self.hp     = 50
         self.image  = pygame.Surface([width, height])
         self.image.fill((255, 255, 255))

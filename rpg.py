@@ -185,7 +185,7 @@ def play():
                         sprite.kill()
 
         VARIABLES                  = [BORDER, DEAD, STORE]
-        FONTS                      = [WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT]
+        FONTS                      = [WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT, PURCHASE_FONT]
         STORE_FONTS                = [COSTS_FONT, MENU_FONT, PURCHASE_FONT]
         BORDER, DEAD, COINS_EARNED = spawn.map(window, sprites_list, p1.hp, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES)
 
