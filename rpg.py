@@ -196,7 +196,19 @@ def play():
                 if position[0] > 274 and position[0] < 363 and position[1] > 300 and position[1] < 337:
                     STORE = True
                 elif position[0] > 234 and position[0] < 408 and position[1] > 370 and position[1] < 387:
-                    print("PLAY")
+                    BORDER       = False
+                    STORE        = False
+                    STORE_ADDED  = False
+                    DEAD         = False
+                    COINS_EARNED = 0
+                    WAVES        = 0
+                    mobs         = []
+                    attacks      = {}
+                    p1           = spawn.player()
+                    sprites_list.add(p1)
+                    STORE_ADDED = False
+
+
 
         if STORE:
             if STORE_ADDED == False:

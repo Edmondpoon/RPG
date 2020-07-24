@@ -36,16 +36,19 @@ class mob(pygame.sprite.Sprite):
         if random.random() <= 0.30:
             RISE = mob.rect.y - player.rect.y
             RUN  = mob.rect.x - player.rect.x
-            if RISE / RUN < 0 and RUN > 1:
+            if RUN > 1 and RISE / RUN < 0:
                 if RISE > 0:
                     RUN = player.rect.x - mob.rect.x
                     SLOPE = RISE / RUN
                     if collide[0]:
                         if collide[1] != player:
-                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3] and SLOPE <= 3:
                                 self.rect.x -= 3
                                 self.rect.y += SLOPE * 3
-                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x -= 3
+                                self.rect.y += 9
+                            elif self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][3]
                             elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
                                 self.rect.x = BORDER_SIZE[mob.maxhp][0]
@@ -53,11 +56,15 @@ class mob(pygame.sprite.Sprite):
                                 self.rect.x = BORDER_SIZE[mob.maxhp][0]
                                 self.rect.y = BORDER_SIZE[mob.maxhp][3]
                         else:
-                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3] and SLOPE <= 3:
                                 self.rect.x -= 3
                                 self.rect.y += SLOPE * 3
                                 return mob
-                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x -= 3
+                                self.rect.y += 9
+                                return mob
+                            elif self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][3]
                                 return mob
                             elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
@@ -68,12 +75,15 @@ class mob(pygame.sprite.Sprite):
                                 self.rect.y = BORDER_SIZE[mob.maxhp][3]
                                 return mob
                     else:
-                        if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                        if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2] and SLOPE <= 3:
                             self.rect.x += 3
-                            self.rect.y -= 3 * SLOPE
+                            self.rect.y -= SLOPE * 3
+                        elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - 9 <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.x += 3
+                            self.rect.y -= 9
                         elif self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1]:
                             self.rect.x = BORDER_SIZE[mob.maxhp][1] 
-                        elif self.rect.y - (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][2]:
+                        elif self.rect.y - 9 <= BORDER_SIZE[mob.maxhp][2]:
                             self.rect.y = BORDER_SIZE[mob.maxhp][2]
                         else:
                             self.rect.x = BORDER_SIZE[mob.maxhp][1]
@@ -83,10 +93,13 @@ class mob(pygame.sprite.Sprite):
                     SLOPE = RISE / RUN
                     if collide[0]:
                         if collide[1] != player:
-                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2] and SLOPE <= 3:
                                 self.rect.x += 3
                                 self.rect.y -= SLOPE * 3
-                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - 9 <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x += 3
+                                self.rect.y -= 9
+                            elif self.rect.y - 9 >= BORDER_SIZE[mob.maxhp][2]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][2]
                             elif self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1]:
                                 self.rect.x = BORDER_SIZE[mob.maxhp][1]
@@ -94,11 +107,15 @@ class mob(pygame.sprite.Sprite):
                                 self.rect.x = BORDER_SIZE[mob.maxhp][1]
                                 self.rect.y = BORDER_SIZE[mob.maxhp][2]
                         else:
-                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2] and SLOPE <= 3:
                                 self.rect.x += 3
                                 self.rect.y -= SLOPE * 3
                                 return mob
-                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - 9 <= BORDER_SIZE[mob.maxhp][3]:
+                                self.rect.x += 3
+                                self.rect.y -= 9
+                                return mob
+                            elif self.rect.y - 9 >= BORDER_SIZE[mob.maxhp][2]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][2]
                                 return mob
                             elif self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1]:
@@ -109,17 +126,20 @@ class mob(pygame.sprite.Sprite):
                                 self.rect.y = BORDER_SIZE[mob.maxhp][2]
                                 return mob
                     else:
-                        if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                        if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3] and SLOPE <= 3:
                             self.rect.x -= 3
-                            self.rect.y += 3 * SLOPE
+                            self.rect.y += SLOPE * 3
+                        elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
+                            self.rect.x -= 3
+                            self.rect.y += 9
                         elif self.rect.x - 3 <= BORDER_SIZE[mob.maxhp][0]:
                             self.rect.x = BORDER_SIZE[mob.maxhp][0] 
-                        elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                        elif self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
                             self.rect.y = BORDER_SIZE[mob.maxhp][3]
                         else:
                             self.rect.x = BORDER_SIZE[mob.maxhp][0]
                             self.rect.y = BORDER_SIZE[mob.maxhp][3]
-            elif  RISE / RUN > 0 and RUN > 1:
+            elif  RUN > 1 and RISE / RUN > 0 and RISE / RUN <= 3:
                 if RISE > 0:
                     SLOPE = RISE / RUN
                     if collide[0]:
@@ -127,7 +147,7 @@ class mob(pygame.sprite.Sprite):
                             if self.rect.x + 3 <= BORDER_SIZE[mob.maxhp][1] and self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
                                 self.rect.x += 3
                                 self.rect.y += SLOPE * 3
-                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            elif self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][3]
                             elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][1]:
                                 self.rect.x = BORDER_SIZE[mob.maxhp][1]
@@ -139,7 +159,7 @@ class mob(pygame.sprite.Sprite):
                                 self.rect.x += 3
                                 self.rect.y += SLOPE * 3
                                 return mob
-                            elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                            elif self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][3]
                                 return mob
                             elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][1]:
@@ -152,10 +172,10 @@ class mob(pygame.sprite.Sprite):
                     else:
                         if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
                             self.rect.x -= 3
-                            self.rect.y -= 3 * SLOPE
+                            self.rect.y -= SLOPE * 3
                         elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
                             self.rect.x = BORDER_SIZE[mob.maxhp][0] 
-                        elif self.rect.y - (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][2]:
+                        elif self.rect.y - 9 <= BORDER_SIZE[mob.maxhp][2]:
                             self.rect.y = BORDER_SIZE[mob.maxhp][2]
                         else:
                             self.rect.x = BORDER_SIZE[mob.maxhp][0]
@@ -167,7 +187,7 @@ class mob(pygame.sprite.Sprite):
                             if self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0] and self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
                                 self.rect.x -= 3
                                 self.rect.y -= SLOPE * 3
-                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            elif self.rect.y - 9 >= BORDER_SIZE[mob.maxhp][2]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][2]
                             elif self.rect.x - 3 <= BORDER_SIZE[mob.maxhp][0]:
                                 self.rect.x = BORDER_SIZE[mob.maxhp][0]
@@ -179,7 +199,7 @@ class mob(pygame.sprite.Sprite):
                                 self.rect.x -= 3
                                 self.rect.y -= SLOPE * 3
                                 return mob
-                            elif self.rect.y - (SLOPE * 3) >= BORDER_SIZE[mob.maxhp][2]:
+                            elif self.rect.y - 9 >= BORDER_SIZE[mob.maxhp][2]:
                                 self.rect.y = BORDER_SIZE[mob.maxhp][2]
                                 return mob
                             elif self.rect.x - 3 >= BORDER_SIZE[mob.maxhp][0]:
@@ -195,12 +215,12 @@ class mob(pygame.sprite.Sprite):
                             self.rect.y += 3 * SLOPE
                         elif self.rect.x + 3 >= BORDER_SIZE[mob.maxhp][1]:
                             self.rect.x = BORDER_SIZE[mob.maxhp][1] 
-                        elif self.rect.y + (SLOPE * 3) <= BORDER_SIZE[mob.maxhp][3]:
+                        elif self.rect.y + 9 <= BORDER_SIZE[mob.maxhp][3]:
                             self.rect.y = BORDER_SIZE[mob.maxhp][3]
                         else:
                             self.rect.x = BORDER_SIZE[mob.maxhp][1]
                             self.rect.y = BORDER_SIZE[mob.maxhp][3]
-            elif RUN != 0 and RUN <= 1:
+            elif RUN != 0 and RISE / RUN > 3:
                 pass
             else:
                 random_movement = random.random()
