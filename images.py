@@ -4,6 +4,7 @@ import random
 import os
 
 class mob(pygame.sprite.Sprite):
+    #creates either a boss, tank, or wizard
     def __init__(self, type_, width, height):
         BOSS_image  = {"R" : "boss1.png", "K" : "boss3.png", "M" : "boss2.png"}
         BOSS_hp     = {"R" : 150, "K" : 100, "M" : 75}
@@ -16,11 +17,13 @@ class mob(pygame.sprite.Sprite):
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
         if "boss" not in type_: 
+            #spawns either a tank or wizard
             self.maxhp  = hp[type_]
             self.hp     = hp[type_]
             self.damage = damage[type_]
             self.image  = pygame.image.load(os.path.join("imgs", mobs[type_]))
         else:
+            #spawns a boss
             BOSS_TYPE   = random.choice(["R", "K", "M"])
             self.maxhp  = BOSS_hp[BOSS_TYPE]
             self.hp     = BOSS_hp[BOSS_TYPE]
@@ -28,11 +31,12 @@ class mob(pygame.sprite.Sprite):
             self.image  = pygame.image.load(os.path.join("imgs", BOSS_image[BOSS_TYPE]))
         self.rect   = self.image.get_rect()
 
-
+    #controls the mob's movement
     def move(self, VEL, entities, mob, player):
         BORDER_SIZE = {10 : [38, 433, 38, 412], 25 : [38, 423, 38, 420], 150 : [38, 358, 38, 49], 100 : [38, 377, 38, 347], 75 : [45, 348, 45,343]}
         DIRECTION = random.choice(["right", "left", "up", "down"])
         collide = collision.movement(entities, mob)
+        #30% chance to move toward player and 70% chance to move randomly
         if random.random() <= 0.30:
             RISE = mob.rect.y - player.rect.y
             RUN  = mob.rect.x - player.rect.x
@@ -329,6 +333,7 @@ class mob(pygame.sprite.Sprite):
 
 
 class tree(pygame.sprite.Sprite):
+    #creates the player sprite
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
         DAMAGE = [2, 5, 7, 10, 15]
@@ -337,18 +342,20 @@ class tree(pygame.sprite.Sprite):
             EQUIP = equip.readlines()
             EQUIP = EQUIP[0].split(" ")
             for item in range(len(EQUIP)):
-                if "True" in EQUIP[item]:
+                if "True" in EQUIP[item] and item < 6:
                     damage = item - 1
-        self.damage = DAMAGE[damage]
-        self.hp     = 50
-        self.image  = pygame.Surface([width, height])
+        self.special = 0
+        self.damage  = DAMAGE[damage]
+        self.hp      = 1
+        self.image   = pygame.Surface([width, height])
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
-        self.image  = pygame.image.load(os.path.join("imgs", "player.jpg"))
-        self.rect   = self.image.get_rect()
-        self.rect.x = POSx
-        self.rect.y = POSy
+        self.image   = pygame.image.load(os.path.join("imgs", "player.jpg"))
+        self.rect    = self.image.get_rect()
+        self.rect.x  = POSx
+        self.rect.y  = POSy
 
+    #controls the player's ability to move right
     def move_right(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.x - VEL >= 38:
@@ -360,6 +367,7 @@ class tree(pygame.sprite.Sprite):
         elif self.rect.x + VEL > 428:
             self.rect.x = 428
 
+    #controls the player's ability to move left
     def move_left(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.x + VEL <= 428:
@@ -371,6 +379,7 @@ class tree(pygame.sprite.Sprite):
         elif self.rect.x - VEL < 38:
             self.rect.x = 38
 
+    #controls the player's ability to move up
     def move_up(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.y + VEL <= 413:
@@ -382,6 +391,7 @@ class tree(pygame.sprite.Sprite):
         elif self.rect.y - VEL < 38:
             self.rect.y = 38
 
+    #controls the player's ability to move down
     def move_down(self, VEL, player, mobs):
         if collision.movement(mobs, player)[0]:
             if self.rect.y - VEL >= 38:
@@ -396,6 +406,7 @@ class tree(pygame.sprite.Sprite):
 
 
 class side_wall(pygame.sprite.Sprite):
+    #creates the side walls for the map
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
         self.image = pygame.Surface([width, height])
@@ -409,6 +420,7 @@ class side_wall(pygame.sprite.Sprite):
 
 
 class top_wall(pygame.sprite.Sprite):
+    #creates the top and bottom walls for the map
     def __init__(self, width, height, POSx, POSy):
         super().__init__()
         self.image = pygame.Surface([width, height])
@@ -422,6 +434,7 @@ class top_wall(pygame.sprite.Sprite):
 
 
 class player_attack(pygame.sprite.Sprite):
+    #creates the player attack's sprite
     def __init__(self, width, height, POSx, POSy, player):
         super().__init__()
         ATTACK_IMAGES = {2 : "attack_1.png", 5 : "attack_2.png", 7 : "attack_3.png", 10 : "attack_4.png", 15 : "attack_5.png"}
@@ -433,6 +446,7 @@ class player_attack(pygame.sprite.Sprite):
         self.rect.x = POSx
         self.rect.y = POSy
 
+    #controls the player attack's ability to move in the first quadrant
     def quadrant1(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx     = 1 / SLOPE
         multiplier = 1
@@ -456,6 +470,7 @@ class player_attack(pygame.sprite.Sprite):
             self.rect.x += round(DELTAx)
             self.rect.y -= DELTAy
 
+    #controls the player attack's ability to move in the second quadrant
     def quadrant2(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx = 1 / SLOPE
         multiplier = 1
@@ -479,6 +494,7 @@ class player_attack(pygame.sprite.Sprite):
             self.rect.x -= round(DELTAx)
             self.rect.y -= DELTAy
 
+    #controls the player attack's ability to move in the third quadrant
     def quadrant3(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx = 1 / SLOPE
         multiplier = 1
@@ -502,6 +518,7 @@ class player_attack(pygame.sprite.Sprite):
             self.rect.x -= round(DELTAx)
             self.rect.y += DELTAy
 
+    #controls the player attack's ability to move in the fourth quadrant
     def quadrant4(self, SLOPE, mobs, attack, sprites_list, attacks_list):
         DELTAx = 1 / SLOPE
         multiplier = 1
@@ -525,6 +542,7 @@ class player_attack(pygame.sprite.Sprite):
             self.rect.x += round(DELTAx)
             self.rect.y += DELTAy
 
+    #controls the player attack's ability to move to the right (horizontally)
     def horizontalright(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
@@ -536,6 +554,7 @@ class player_attack(pygame.sprite.Sprite):
         else:
             self.rect.x += SPEED
 
+    #controls the player attack's ability to move to the left (horizontally)
     def horizontalleft(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
@@ -547,6 +566,7 @@ class player_attack(pygame.sprite.Sprite):
         else:
             self.rect.x -= SPEED
 
+    #controls the player attack's ability to move up (vertically)
     def verticalup(self, SPEED,  mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
@@ -558,6 +578,7 @@ class player_attack(pygame.sprite.Sprite):
         else:
             self.rect.y -= SPEED
 
+    #controls the player attack's ability to move down (vertically)
     def verticaldown(self, SPEED, mobs, attack, sprites_list, attacks_list):
         if collision.attack_movement(mobs, attack)[0]:
            sprites_list.remove(attack)
@@ -572,13 +593,14 @@ class player_attack(pygame.sprite.Sprite):
 
 
 class store_attacks(pygame.sprite.Sprite):
+    #creates the images of the different attacks that can be purchased in the store
     def __init__(self, width, height, POSx, POSy, attack):
         super().__init__()
-        attacks    = ["attack1.png", "attack2.png", "attack3.png", "attack4.png", "attack5.png"]
-        self.image = pygame.Surface([width,height])
+        ITEMS       = ["attack1.png", "attack2.png", "attack3.png", "attack4.png", "attack5.png", "special1.jpg", "special2.jpg", "special3.jpg", "special4.jpg"]
+        self.image  = pygame.Surface([width,height])
         self.image.fill((255, 255, 255))
         self.image.set_colorkey((255, 255, 255))
-        self.image  = pygame.image.load(os.path.join("imgs", attacks[attack]))
+        self.image  = pygame.image.load(os.path.join("store_imgs", ITEMS[attack]))
         self.rect   = self.image.get_rect()
         self.rect.x = POSx
         self.rect.y = POSy

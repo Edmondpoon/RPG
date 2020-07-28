@@ -15,6 +15,8 @@ def wizard(mobs, player):
     mob.rect.x          = random.randint(38, 433)
     mob.rect.y          = random.randint(38, 417)
     FLAG          = collision.Spawn(entities, mob)
+
+    #checks if the position would collide with another existing mob
     while FLAG == True:
         mob.rect.x = random.randint(38, 433)
         mob.rect.y = random.randint(38, 417)
@@ -30,6 +32,8 @@ def tank(mobs, player):
     mob.rect.x          = random.randint(38, 433)
     mob.rect.y          = random.randint(38, 417)
     FLAG          = collision.Spawn(entities, mob)
+
+    #checks if the position would collide with another existing mob
     while FLAG == True:
         mob.rect.x = random.randint(38, 433)
         mob.rect.y = random.randint(38, 417)
@@ -44,6 +48,8 @@ def boss(mobs, player):
     mob.rect.x          = random.randint(38, 433)
     mob.rect.y          = random.randint(38, 417)
     FLAG          = collision.Spawn(entities, mob)
+
+    #checks if the position would collide with another existing mob
     while FLAG == True:
         mob.rect.x = random.randint(38, 433)
         mob.rect.y = random.randint(38, 417)
@@ -80,22 +86,38 @@ def generate_wall(sprites_list, BORDER):
         sprites_list.add(wall)
 
 #creates the map
-def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES):
+def map(window, sprites_list, player, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES):
+
+    #variables
     BORDER, DEAD, STORE                          = VARIABLES
     WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT, FONT_25 = FONTS
 
     if STORE == False:
+        #fills screen with white
         window.fill((255, 255, 255))
         #draws black sidebar
         pygame.draw.rect(window, (0, 0, 0), pygame.Rect((500, 0), (150, 500)))
         #draws the hp bar background
         pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 81), (110, 30)))
+        #adds the current wave
         WAVE_TEXT = FONT_25.render("Current wave: " + str(WAVES), True, (200, 200, 200))
         window.blit(WAVE_TEXT, (510, 20))
 
-    #changes the length of the player hp bar depedning on the player's hp
-    if int(player_hp) <= 50 and int(player_hp) > 0:
-        percentage = int(player_hp) / 50
+    #controls special move bar
+    if int(player.hp) <= 50 and int(player.hp) > 0:
+        pygame.draw.rect(window, (255, 255, 255), pygame.Rect((520, 151), (110, 30))) 
+        SPECIAL_MOVE = HP_FONT.render("Special move", True, (0, 0, 255))
+        window.blit(SPECIAL_MOVE, (510, 126))
+        SPECIAL_BAR = player.special        
+        if SPECIAL_BAR != 0:
+            pygame.draw.rect(window, (0, 0, 255), pygame.Rect((525, 156), (SPECIAL_BAR, 20)))
+        if SPECIAL_BAR == 100:
+            FULL_TEXT = HP_FONT.render("Full", True, (200, 200, 200))
+            window.blit(FULL_TEXT, (556, 158))
+
+    #changes the length of the player and mob hp bar depedning on the player's hp
+    if int(player.hp) <= 50 and int(player.hp) > 0:
+        percentage = int(player.hp) / 50
         hp_size    = int( 100 * percentage)
         pygame.draw.rect(window, (255, 0, 0), pygame.Rect((525, 86), (hp_size, 20)))
 
@@ -116,14 +138,14 @@ def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, W
                     window.blit(mob_hp, (545, hp_value_placements[mob]))
                 else: 
                     window.blit(mob_hp, (532, hp_value_placements[mob]))
-
-        if int(player_hp) > 0:
+        if int(player.hp) > 0:
             hp_bar = WORD_FONT.render("Player hp", True, (255, 255, 255))
             window.blit(hp_bar, (510, 50))
-            hp = HP_FONT.render(str(player_hp) + " / 50", True, (200, 200, 200))
+            hp = HP_FONT.render(str(player.hp) + " / 50", True, (200, 200, 200))
             window.blit(hp, (545, 88))
 
-    elif int(player_hp) <= 0 and STORE == False:
+    #adds coins to player total and generates death screen
+    elif int(player.hp) <= 0 and STORE == False:
         with open("coins.txt", mode = "r+") as coins:
             COIN  = coins.readlines()
             COIN  = COIN[0].split(" ")
@@ -154,6 +176,7 @@ def map(window, sprites_list, player_hp, mobs, VARIABLES, FONTS, COINS_EARNED, W
         pygame.display.flip()
         return True, True, 0
 
+    #generates the border on the map
     if BORDER == False:
         spawn.generate_wall(sprites_list, BORDER)
     sprites_list.draw(window)

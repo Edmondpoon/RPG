@@ -8,50 +8,68 @@ import time
 import spawn
 
 pygame.init()
-window        = pygame.display.set_mode((650, 500))
-sprites_list  = pygame.sprite.Group()
-COSTS_FONT    = pygame.font.SysFont("comicsans", 20)
-PURCHASE_FONT = pygame.font.SysFont("comicsans", 25)
-MENU_FONT     = pygame.font.SysFont("comicsans", 30)
-WORD_FONT     = pygame.font.SysFont('comicsans', 40)
-DEATH_FONT    = pygame.font.SysFont("comicsans", 100)
-HP_FONT       = pygame.font.SysFont('comicsans', 30)
-OPTIONS_FONT  = pygame.font.SysFont("comicsans", 50)
-OPTIONS_FONT.set_underline(True)
-WIDTH         = 15
-HEIGHT        = 15
-VEL           = 5
-MOB_VEL       = 3
 
-def hp_changer(player, mob_attackers, player_attacks):
+#variables
+window         = pygame.display.set_mode((650, 500))
+sprites_list   = pygame.sprite.Group()
+COSTS_FONT     = pygame.font.SysFont("comicsans", 20)
+PURCHASE_FONT2 = pygame.font.SysFont("comicsans", 22)
+PURCHASE_FONT  = pygame.font.SysFont("comicsans", 25)
+MENU_FONT      = pygame.font.SysFont("comicsans", 30)
+WORD_FONT      = pygame.font.SysFont('comicsans', 40)
+DEATH_FONT     = pygame.font.SysFont("comicsans", 100)
+HP_FONT        = pygame.font.SysFont('comicsans', 30)
+OPTIONS_FONT   = pygame.font.SysFont("comicsans", 50)
+OPTIONS_FONT.set_underline(True)
+WIDTH          = 15
+HEIGHT         = 15
+VEL            = 5
+MOB_VEL        = 3
+
+#updates player and mob hps
+def hp_changer(player, mob_attackers, player_attacks, SPECIAL):
     for mob in mob_attackers:
         player.hp -= mob.damage
     for attack in player_attacks:
         player_attacks[attack].hp -= player.damage
+        if player.special + player.damage <= 100 and SPECIAL == False:
+            player.special += player.damage
+        elif SPECIAL == False:
+            player.special = 100
 
+#initializes the game
 def play():
-    BORDER       = False
-    STORE        = False
-    STORE_ADDED  = False
-    DEAD         = False
-    COINS_EARNED = 0
-    WAVES        = 0
-    mobs         = []
-    attacks      = {}
-    run          = True
-    p1           = spawn.player()
+
+    #variables
+    BORDER         = False
+    SPECIAL        = False
+    STORE          = False
+    ATTACKS_ADDED  = False
+    SPECIALS_ADDED = False
+    DEAD           = False
+    COINS_EARNED   = 0
+    STORE_TYPE     = "attacks"
+    WAVES          = 0
+    mobs           = []
+    attacks        = {}
+    run            = True
+    p1             = spawn.player()
     sprites_list.add(p1)
 
     while run:
         pygame.time.delay(50)
-        for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                run=False
 
+        #variables
         attacks_remove = []
         p1_hp_change   = []
         mob_hp_change  = {}
 
+        #allows player to end game manually
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                run=False
+        
+        #controls player movement
         keys=pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             p1.move_left(VEL, p1, mobs)
@@ -62,6 +80,7 @@ def play():
         if keys[pygame.K_DOWN]:
             p1.move_down(VEL, p1, mobs)
 
+        #spawns and controls mobs and controls waves
         if mobs == [] and DEAD == False:
             WAVES +=1
             spawn.spawn_mobs(mobs, p1, sprites_list, WAVES)
@@ -74,8 +93,8 @@ def play():
                 if attack != None:
                    p1_hp_change.append(attack)
 
-
-        if keys[pygame.K_SPACE] and not len(attacks.keys()) >= 7:
+        #controls player attacks
+        if keys[pygame.K_x] and not len(attacks.keys()) >= 7:
             attack   = images.player_attack(WIDTH, HEIGHT, p1.rect.x, p1.rect.y, p1)
             closest = [None, 1000000000]
             for mob in mobs:
@@ -91,7 +110,6 @@ def play():
                 elif mob.rect.x < p1.rect.x and mob.rect.y > p1.rect.y:
                     if ((p1.rect.x - mob.rect.x) ** 2 + (mob.rect.y - p1.rect.y) ** 2) ** 0.5 < closest[1]:
                         closest = [mob, ((p1.rect.x - mob.rect.x) ** 2 + (mob.rect.y - p1.rect.y) ** 2) ** 0.5]
-
             if closest[0] != None and closest[0].rect.x > p1.rect.x and closest[0].rect.y > p1.rect.y:
                 #fourth quadrant
                 RUN   = closest[0].rect.x - p1.rect.x
@@ -136,7 +154,6 @@ def play():
                 #x-axis left
                 attacks[attack] = ["horizontalleft", 1]
                 sprites_list.add(attack)
-
         for attack in attacks.keys():
             if attacks[attack][0] == "quadrant1":
                 p1_attack = attack.quadrant1(attacks[attack][1], mobs, attack, sprites_list, attacks_remove)
@@ -173,9 +190,19 @@ def play():
         for attack in attacks_remove:
             attacks.pop(attack)
 
-        sprites_list.update()
-        hp_changer(p1, p1_hp_change, mob_hp_change)
+        if keys[pygame.K_z] and p1.special == 100:
+            SPECIAL = True
 
+        if SPECIAL and p1.special > 0:
+            p1.special -= 1
+        else:
+            SPECIAL = False
+
+        #updates hp and sprites
+        sprites_list.update()
+        hp_changer(p1, p1_hp_change, mob_hp_change, SPECIAL)
+
+        #removes mobs and adds coins when a mob's hp reaches 0
         for mob in mobs:
             if mob.hp <= 0:
                 COINS_EARNED = store.COINS(mob, COINS_EARNED)
@@ -184,40 +211,59 @@ def play():
                     if sprite == mob:
                         sprite.kill()
 
+        #variables
         VARIABLES                  = [BORDER, DEAD, STORE]
         FONTS                      = [WORD_FONT, HP_FONT, DEATH_FONT, OPTIONS_FONT, PURCHASE_FONT]
         STORE_FONTS                = [COSTS_FONT, MENU_FONT, PURCHASE_FONT]
-        BORDER, DEAD, COINS_EARNED = spawn.map(window, sprites_list, p1.hp, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES)
+        STORE2_FONTS               = [COSTS_FONT, MENU_FONT, PURCHASE_FONT2, PURCHASE_FONT]
+        BORDER, DEAD, COINS_EARNED = spawn.map(window, sprites_list, p1, mobs, VARIABLES, FONTS, COINS_EARNED, WAVES)
 
+        #allows option to respawn or go to the shop
         if DEAD:
             WAVES = 0
             if pygame.mouse.get_pressed() == (True, False, False):
                 position = pygame.mouse.get_pos()
                 if position[0] > 274 and position[0] < 363 and position[1] > 300 and position[1] < 337:
+                    #opens the store
                     STORE = True
                 elif position[0] > 234 and position[0] < 408 and position[1] > 370 and position[1] < 387:
-                    BORDER       = False
-                    STORE        = False
-                    STORE_ADDED  = False
-                    DEAD         = False
-                    COINS_EARNED = 0
-                    WAVES        = 0
-                    mobs         = []
-                    attacks      = {}
-                    p1           = spawn.player()
+                    #restarts game
+                    BORDER         = False
+                    STORE          = False
+                    ATTACKS_ADDED  = False
+                    SPECIALS_ADDED = False
+                    DEAD           = False
+                    COINS_EARNED   = 0
+                    STORE_TYPE     = "attacks"
+                    WAVES          = 0
+                    mobs           = []
+                    attacks        = {}
+                    p1             = spawn.player()
                     sprites_list.add(p1)
                     STORE_ADDED = False
 
-
-
+        #generates and updates store
         if STORE:
-            if STORE_ADDED == False:
-                STORE_ATTACKS = store.generate_store(window, COSTS_FONT)
-                for attack in STORE_ATTACKS:
-                    sprites_list.add(attack)
-                STORE_ADDED == True
-            STORE, STORE_ADDED = store.maintain_store(window, sprites_list, STORE_FONTS)
-
+            STORE_ITEMS = store.generate_store(window, COSTS_FONT)
+            if STORE_TYPE == "attacks":
+                if ATTACKS_ADDED == False:
+                    if sprites_list != []:
+                        for sprite in sprites_list:
+                            sprite.kill()
+                    for attack in range(5):
+                        sprites_list.add(STORE_ITEMS[attack])
+                    ATTACKS_ADDED == True
+                STORE, STORE_TYPE, ATTACKS_ADDED, SPECIALS_ADDED = store.maintain_store(window, sprites_list, STORE_FONTS)
+            elif STORE_TYPE == "specials":
+                if SPECIALS_ADDED == False:
+                    if sprites_list != []:
+                        for sprite in sprites_list:
+                            sprite.kill()
+                    for attack in range(9):
+                        if attack > 4:
+                            sprites_list.add(STORE_ITEMS[attack])
+                    SPECIALS_ADDED = True
+                STORE, STORE_TYPE, ATTACKS_ADDED, SPECIALS_ADDED = store.maintain_store2(window, sprites_list, STORE2_FONTS)
 
         clock.tick(60)
 
