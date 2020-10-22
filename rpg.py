@@ -42,7 +42,7 @@ def play():
 
     #variables
     BORDER         = False
-    SPECIAL        = False
+    SPECIAL        = None
     STORE          = False
     ATTACKS_ADDED  = False
     SPECIALS_ADDED = False
@@ -191,12 +191,14 @@ def play():
             attacks.pop(attack)
 
         if keys[pygame.K_z] and p1.special == 100:
+            specials = {6 : "special1", 7 : "special2", 8 : "special3", 9 : "special4"}
+
             SPECIAL = True
 
-        if SPECIAL and p1.special > 0:
+        if SPECIAL != None and p1.special > 0:
             p1.special -= 1
         else:
-            SPECIAL = False
+            SPECIAL = None
 
         #updates hp and sprites
         sprites_list.update()
