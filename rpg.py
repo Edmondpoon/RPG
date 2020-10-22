@@ -9,6 +9,8 @@ import spawn
 
 pygame.init()
 
+#test
+
 #variables
 window         = pygame.display.set_mode((650, 500))
 sprites_list   = pygame.sprite.Group()
